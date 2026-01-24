@@ -24,9 +24,9 @@ function App() {
   const sessionId = useRef(getSessionId());
 
   // ============================================
-  // 📊 ANALYTICS FUNCTIONS
+  // 📊 ANALYTICS FUNCTIONS - PRODUCTION
   // ============================================
-  const API_URL = 'http://localhost:5000/api/analytics';
+  const API_URL = 'https://api.synora.li/api/analytics';
 
   const trackEvent = useCallback(async (eventType, data = {}) => {
     try {
@@ -115,9 +115,9 @@ function App() {
   }, []);
 
   // ============================================
-  // 🧠 LEARNING FUNCTIONS
+  // 🧠 LEARNING FUNCTIONS - PRODUCTION
   // ============================================
-  const PREFS_URL = 'http://localhost:5000/api/preferences';
+  const PREFS_URL = 'https://api.synora.li/api/preferences';
 
   const learnFromSearch = useCallback(async (query, category, budget) => {
     try {
@@ -203,7 +203,7 @@ function App() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Send Message
+  // Send Message - PRODUCTION
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -217,7 +217,7 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/chat', {
+      const response = await fetch('https://api.synora.li/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: searchQuery, conversationHistory: newHistory })
