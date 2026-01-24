@@ -1,6 +1,6 @@
 // ============================================
 // SYNORA - Auth Handler
-// Version: 4.0 - CLEAN - No Loop
+// Version: 4.0 - PRODUCTION
 // ============================================
 
 // ============================================
@@ -15,7 +15,7 @@
   if (verifyToken) {
     console.log('🔐 Verification token found...');
     try {
-      const response = await fetch(`http://localhost:5000/api/auth/verify/${verifyToken}`);
+      const response = await fetch(`https://api.synora.li/api/auth/verify/${verifyToken}`);
       const data = await response.json();
       
       if (response.ok && data.success) {
@@ -40,11 +40,7 @@
     return;
   }
   
-  // ============================================
-  // KEIN AUTO-REDIRECT MEHR!
-  // User muss sich manuell einloggen
-  // ============================================
-  console.log('✅ SYNORA Auth v4.0 ready - No auto-redirect');
+  console.log('✅ SYNORA Auth v4.0 ready - Production');
 })();
 
 // ============================================
@@ -117,7 +113,7 @@ async function handleRegister(event) {
   }
   
   try {
-    const response = await fetch('http://localhost:5000/api/auth/register', {
+    const response = await fetch('https://api.synora.li/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ firstname, lastname, email, password, birthdate, terms })
@@ -166,7 +162,7 @@ async function handleLogin(event) {
   }
   
   try {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
+    const response = await fetch('https://api.synora.li/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -175,7 +171,6 @@ async function handleLogin(event) {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Login fehlgeschlagen');
     
-    // SPEICHERN FÜR REACT
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify({
       name: data.user?.name || data.user?.firstname || email.split('@')[0],
@@ -186,8 +181,7 @@ async function handleLogin(event) {
     console.log('✅ Login OK - Token gespeichert');
     showNotification('Login erfolgreich!', 'success');
     
-    // DIREKT ZUM CHAT - OHNE DELAY
-    window.location.replace('http://localhost:3000');
+    window.location.replace('https://synora.li');
     
   } catch (error) {
     showNotification(error.message, 'error');
@@ -212,7 +206,7 @@ async function handleForgotPassword(event) {
   }
   
   try {
-    await fetch('http://localhost:5000/api/auth/forgot-password', {
+    await fetch('https://api.synora.li/api/auth/forgot-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
@@ -267,4 +261,4 @@ window.handleLogin = handleLogin;
 window.handleForgotPassword = handleForgotPassword;
 window.showNotification = showNotification;
 
-console.log('✅ SYNORA Auth v4.0 loaded');
+console.log('✅ SYNORA Auth v4.0 loaded - Production');
