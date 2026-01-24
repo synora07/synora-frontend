@@ -1,12 +1,10 @@
 // ============================================
 // SYNORA - API Service
-// Kommunikation mit Backend (localhost:5000)
+// Kommunikation mit Backend - PRODUCTION
 // ============================================
-
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://api.synora.li/api';
 
 const api = {
-
   // USER REGISTRATION
   async register(userData) {
     try {
@@ -26,16 +24,12 @@ const api = {
           terms: true
         })
       });
-
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.error || data.message || 'Registration failed');
       }
-
       console.log('✅ Registration successful:', data);
       return data;
-
     } catch (error) {
       console.error('❌ Registration error:', error);
       throw error;
@@ -54,24 +48,18 @@ const api = {
         },
         body: JSON.stringify({ email, password })
       });
-
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.error || data.message || 'Login failed');
       }
-
-      // Token speichern
       if (data.token) {
         localStorage.setItem('synora_token', data.token);
         localStorage.setItem('synora_user', JSON.stringify(data.user || { email }));
         localStorage.setItem('isLoggedIn', 'true');
         console.log('✅ Token saved to localStorage');
       }
-
       console.log('✅ Login successful');
       return data;
-
     } catch (error) {
       console.error('❌ Login error:', error);
       throw error;
@@ -121,23 +109,17 @@ const api = {
         },
         body: JSON.stringify({ email })
       });
-
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.error || data.message || 'Request failed');
       }
-
       return data;
-
     } catch (error) {
       console.error('❌ Forgot password error:', error);
       throw error;
     }
   }
-
 };
 
-// Global verfügbar machen
 window.api = api;
-console.log('✅ SYNORA API loaded');
+console.log('✅ SYNORA API loaded - Production');
