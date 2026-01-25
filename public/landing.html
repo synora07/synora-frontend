@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SYNORA - Dein KI-Shopping Assistent</title>
+  <meta name="description" content="SYNORA sagt dir nicht nur WAS, sondern WARUM. Transparente Produktempfehlungen für die Schweiz.">
   <link rel="icon" href="/favicon.ico">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -13,7 +14,6 @@
     :root {
       --bg-dark: #050807;
       --bg-card: #0a0d0b;
-      --bg-card-hover: #0d110f;
       --primary: #2E8B57;
       --primary-light: #3da86d;
       --primary-dark: #236B43;
@@ -23,6 +23,8 @@
       --border: rgba(255, 255, 255, 0.06);
       --glass-bg: rgba(255, 255, 255, 0.02);
       --glass-border: rgba(255, 255, 255, 0.06);
+      --error: #ef4444;
+      --success: #22c55e;
     }
 
     /* ==========================================
@@ -34,6 +36,10 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg-dark);
@@ -43,12 +49,12 @@
     }
 
     a {
-      text-decoration: none;
       color: inherit;
+      text-decoration: none;
     }
 
     /* ==========================================
-       HEADER / NAV
+       NAVIGATION
        ========================================== */
     .nav {
       position: fixed;
@@ -57,7 +63,7 @@
       right: 0;
       z-index: 1000;
       padding: 16px 24px;
-      background: rgba(5, 8, 7, 0.8);
+      background: rgba(5, 8, 7, 0.9);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--glass-border);
     }
@@ -89,12 +95,21 @@
       background: linear-gradient(135deg, var(--primary-light), var(--primary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
 
-    .nav-buttons {
+    .nav-links {
       display: flex;
-      gap: 12px;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      transition: color 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text);
     }
 
     .nav-btn {
@@ -104,23 +119,58 @@
       transition: all 0.3s ease;
     }
 
-    .nav-btn-secondary {
-      color: var(--text-muted);
-    }
-
-    .nav-btn-secondary:hover {
-      color: var(--text);
-    }
-
     .nav-btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
-      box-shadow: 0 4px 15px rgba(46, 139, 87, 0.3);
     }
 
     .nav-btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 25px rgba(46, 139, 87, 0.4);
+      box-shadow: 0 6px 20px rgba(46, 139, 87, 0.4);
+    }
+
+    /* ==========================================
+       BACKGROUND ORBS
+       ========================================== */
+    .bg-orbs {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+    }
+
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+      top: -150px;
+      right: -150px;
+      animation: orbFloat 20s ease-in-out infinite;
+    }
+
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+      bottom: -100px;
+      left: -100px;
+      animation: orbFloat 25s ease-in-out infinite reverse;
+    }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-50px, 50px) scale(1.1); }
     }
 
     /* ==========================================
@@ -131,111 +181,29 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
       padding: 120px 20px 80px;
-      overflow: hidden;
-    }
-
-    .hero-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    /* Animated Orbs */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.4;
-    }
-
-    .orb-1 {
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-      top: -100px;
-      right: -100px;
-      animation: orbFloat1 20s ease-in-out infinite;
-    }
-
-    .orb-2 {
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
-      bottom: -50px;
-      left: -50px;
-      animation: orbFloat2 25s ease-in-out infinite;
-    }
-
-    .orb-3 {
-      width: 200px;
-      height: 200px;
-      background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: orbFloat3 15s ease-in-out infinite;
-    }
-
-    @keyframes orbFloat1 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(-50px, 50px) scale(1.1); }
-    }
-
-    @keyframes orbFloat2 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(30px, -30px) scale(1.15); }
-    }
-
-    @keyframes orbFloat3 {
-      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
-      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.5; }
+      position: relative;
+      z-index: 1;
     }
 
     .hero-content {
-      position: relative;
-      z-index: 1;
       text-align: center;
       max-width: 800px;
     }
 
-    /* ==========================================
-       LOGO - REDUZIERTER GLOW
-       ========================================== */
-    .hero-logo-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 32px;
-      position: relative;
-      height: 160px;
-    }
-
-    .hero-logo-image {
-      width: 140px;
-      height: 140px;
-      object-fit: contain;
-      position: relative;
-      z-index: 2;
-      /* Sanfter Glow - reduziert */
-      filter: drop-shadow(0 0 10px rgba(46, 139, 87, 0.4))
-              drop-shadow(0 0 30px rgba(46, 139, 87, 0.2));
+    .hero-logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 32px;
+      filter: drop-shadow(0 0 15px rgba(46, 139, 87, 0.4));
       animation: logoFloat 4s ease-in-out infinite;
     }
 
     @keyframes logoFloat {
-      0%, 100% { transform: translateY(0px); }
+      0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
 
-    /* ==========================================
-       BADGE
-       ========================================== */
     .hero-badge {
       display: inline-flex;
       align-items: center;
@@ -247,7 +215,6 @@
       font-size: 14px;
       color: var(--primary-light);
       margin-bottom: 24px;
-      animation: fadeInUp 0.8s ease-out;
     }
 
     .badge-dot {
@@ -263,51 +230,36 @@
       50% { opacity: 0.5; transform: scale(1.2); }
     }
 
-    /* ==========================================
-       TYPOGRAPHY
-       ========================================== */
     .hero-title {
       font-family: 'Space Grotesk', sans-serif;
       font-size: clamp(2rem, 5vw, 3.2rem);
       font-weight: 700;
       line-height: 1.2;
       margin-bottom: 20px;
-      animation: fadeInUp 0.8s ease-out 0.1s both;
     }
 
-    .title-gradient {
+    .hero-title .highlight {
       background: linear-gradient(135deg, var(--primary-light), var(--primary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .title-highlight {
-      color: var(--primary-light);
     }
 
     .hero-subtitle {
       font-size: 1.15rem;
       color: var(--text-muted);
       margin-bottom: 32px;
-      animation: fadeInUp 0.8s ease-out 0.2s both;
     }
 
     .hero-subtitle strong {
       color: var(--text);
     }
 
-    /* ==========================================
-       STATS
-       ========================================== */
     .hero-stats {
       display: flex;
       justify-content: center;
-      align-items: center;
       gap: 32px;
       margin-bottom: 32px;
       flex-wrap: wrap;
-      animation: fadeInUp 0.8s ease-out 0.3s both;
     }
 
     .stat {
@@ -335,16 +287,12 @@
       background: var(--border);
     }
 
-    /* ==========================================
-       BUTTONS
-       ========================================== */
     .hero-buttons {
       display: flex;
       justify-content: center;
       gap: 16px;
       margin-bottom: 24px;
       flex-wrap: wrap;
-      animation: fadeInUp 0.8s ease-out 0.4s both;
     }
 
     .btn {
@@ -352,10 +300,9 @@
       border-radius: 10px;
       font-size: 1rem;
       font-weight: 600;
-      text-decoration: none;
-      transition: all 0.3s ease;
       cursor: pointer;
       border: none;
+      transition: all 0.3s ease;
     }
 
     .btn-primary {
@@ -380,13 +327,9 @@
       border-color: var(--primary);
     }
 
-    /* ==========================================
-       TRUST TEXT
-       ========================================== */
     .hero-trust {
       font-size: 0.9rem;
       color: var(--text-dim);
-      animation: fadeInUp 0.8s ease-out 0.5s both;
     }
 
     /* ==========================================
@@ -395,9 +338,11 @@
     .features {
       padding: 80px 20px;
       background: var(--bg-card);
+      position: relative;
+      z-index: 1;
     }
 
-    .features-content {
+    .section-content {
       max-width: 1100px;
       margin: 0 auto;
     }
@@ -407,6 +352,12 @@
       font-size: 2rem;
       text-align: center;
       margin-bottom: 48px;
+    }
+
+    .section-title .highlight {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .features-grid {
@@ -437,7 +388,6 @@
       font-family: 'Space Grotesk', sans-serif;
       font-size: 1.2rem;
       margin-bottom: 12px;
-      color: var(--text);
     }
 
     .feature-desc {
@@ -446,21 +396,20 @@
     }
 
     /* ==========================================
-       HOW IT WORKS
+       HOW IT WORKS SECTION
        ========================================== */
     .how-it-works {
       padding: 80px 20px;
-    }
-
-    .how-it-works-content {
-      max-width: 900px;
-      margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
     .steps {
       display: flex;
       flex-direction: column;
       gap: 32px;
+      max-width: 700px;
+      margin: 0 auto;
     }
 
     .step {
@@ -494,12 +443,185 @@
     }
 
     /* ==========================================
+       AUTH SECTION (Register/Login)
+       ========================================== */
+    .auth-section {
+      padding: 80px 20px;
+      background: var(--bg-card);
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-container {
+      max-width: 450px;
+      margin: 0 auto;
+    }
+
+    .auth-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 32px;
+    }
+
+    .auth-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 24px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      padding: 4px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .tab.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .tab:hover:not(.active) {
+      color: var(--text);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(46, 139, 87, 0.1);
+    }
+
+    .form-group input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 8px;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(46, 139, 87, 0.4);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 16px;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    .form-footer a {
+      color: var(--primary-light);
+      cursor: pointer;
+    }
+
+    .form-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .message {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    .message.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      display: block;
+    }
+
+    .message.success {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #86efac;
+      display: block;
+    }
+
+    .form-container {
+      display: none;
+    }
+
+    .form-container.active {
+      display: block;
+    }
+
+    /* ==========================================
        CTA SECTION
        ========================================== */
     .cta {
       padding: 80px 20px;
-      background: var(--bg-card);
       text-align: center;
+      position: relative;
+      z-index: 1;
     }
 
     .cta-content {
@@ -527,56 +649,40 @@
       color: var(--text-dim);
       font-size: 0.85rem;
       border-top: 1px solid var(--glass-border);
-    }
-
-    /* ==========================================
-       ANIMATIONS
-       ========================================== */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      position: relative;
+      z-index: 1;
     }
 
     /* ==========================================
        RESPONSIVE
        ========================================== */
     @media (max-width: 768px) {
-      .nav-btn-secondary {
+      .nav-links {
         display: none;
       }
 
       .hero {
         padding: 100px 16px 60px;
       }
-      
-      .hero-logo-container {
-        height: 130px;
+
+      .hero-logo {
+        width: 80px;
+        height: 80px;
       }
-      
-      .hero-logo-image {
-        width: 100px;
-        height: 100px;
-      }
-      
+
       .hero-stats {
         gap: 20px;
       }
-      
+
       .stat-divider {
         display: none;
       }
-      
+
       .hero-buttons {
         flex-direction: column;
         align-items: center;
       }
-      
+
       .btn {
         width: 100%;
         max-width: 280px;
@@ -598,48 +704,43 @@
         <img src="/img/synora-logo.png" alt="SYNORA">
         <span>SYNORA</span>
       </a>
-      <div class="nav-buttons">
-        <a href="#features" class="nav-btn nav-btn-secondary">Features</a>
-        <a href="/" class="nav-btn nav-btn-primary">Jetzt starten</a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">So funktioniert's</a>
+        <a href="#auth" class="nav-link">Anmelden</a>
+        <a href="/" class="nav-btn nav-btn-primary">Zur App</a>
       </div>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-bg">
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="orb orb-3"></div>
-    </div>
+  <!-- Background Orbs -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
 
+  <!-- ==========================================
+       HERO SECTION
+       ========================================== -->
+  <section class="hero" id="hero">
     <div class="hero-content">
-      <!-- Logo -->
-      <div class="hero-logo-container">
-        <img src="/img/synora-logo.png" alt="SYNORA Logo" class="hero-logo-image">
-      </div>
+      <img src="/img/synora-logo.png" alt="SYNORA" class="hero-logo">
 
-      <!-- Badge -->
       <div class="hero-badge">
         <span class="badge-dot"></span>
         KI-Shopping Assistent
       </div>
 
-      <!-- Headline -->
       <h1 class="hero-title">
-        <span class="title-gradient">SYNORA</span> sagt dir nicht nur
-        <span class="title-highlight">WAS</span>, sondern
-        <span class="title-highlight">WARUM</span>
+        <span class="highlight">SYNORA</span> sagt dir nicht nur<br>
+        WAS, sondern <span class="highlight">WARUM</span>
       </h1>
 
-      <!-- Subtitle -->
       <p class="hero-subtitle">
-        6 Produkte geprüft. 3 aussortiert. 3 passen perfekt.
-        <br>
+        6 Produkte geprüft. 3 aussortiert. 3 passen perfekt.<br>
         <strong>Transparente Empfehlungen</strong>, denen du vertrauen kannst.
       </p>
 
-      <!-- Stats -->
       <div class="hero-stats">
         <div class="stat">
           <span class="stat-value">84/100</span>
@@ -657,27 +758,23 @@
         </div>
       </div>
 
-      <!-- CTA Buttons -->
       <div class="hero-buttons">
-        <a href="/" class="btn btn-primary">
-          🚀 Jetzt kostenlos testen
-        </a>
-        <a href="#features" class="btn btn-secondary">
-          Mehr erfahren
-        </a>
+        <a href="/" class="btn btn-primary">🚀 Jetzt kostenlos testen</a>
+        <a href="#auth" class="btn btn-secondary">Registrieren / Anmelden</a>
       </div>
 
-      <!-- Trust Text -->
       <p class="hero-trust">
-        ✓ 3 kostenlose Suchen &nbsp;•&nbsp; ✓ Keine Kreditkarte &nbsp;•&nbsp; ✓ Sofort starten
+        ✓ 3 kostenlose Suchen ohne Anmeldung • ✓ Unbegrenzt mit Account • ✓ 100% kostenlos
       </p>
     </div>
   </section>
 
-  <!-- Features Section -->
+  <!-- ==========================================
+       FEATURES SECTION
+       ========================================== -->
   <section class="features" id="features">
-    <div class="features-content">
-      <h2 class="section-title">Warum <span class="title-gradient">SYNORA</span>?</h2>
+    <div class="section-content">
+      <h2 class="section-title">Warum <span class="highlight">SYNORA</span>?</h2>
       
       <div class="features-grid">
         <div class="feature-card">
@@ -697,13 +794,33 @@
           <h3 class="feature-title">Vertrauenswürdig</h3>
           <p class="feature-desc">Jedes Produkt wird mit Perplexity verifiziert. Du bekommst nur echte, verfügbare Produkte mit korrekten Preisen.</p>
         </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🇨🇭</div>
+          <h3 class="feature-title">Schweizer Shops</h3>
+          <p class="feature-desc">Wir priorisieren Digitec, Galaxus, Interdiscount und andere vertrauenswürdige Schweizer Händler.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3 class="feature-title">Natürliche Sprache</h3>
+          <p class="feature-desc">Sag einfach was du suchst - in deinen eigenen Worten. Keine komplizierten Filter nötig.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h3 class="feature-title">Feedback-Loop</h3>
+          <p class="feature-desc">Nicht zufrieden? Sag "günstiger" oder "andere Marke" - SYNORA passt die Suche sofort an.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- How It Works -->
-  <section class="how-it-works">
-    <div class="how-it-works-content">
+  <!-- ==========================================
+       HOW IT WORKS SECTION
+       ========================================== -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="section-content">
       <h2 class="section-title">So funktioniert's</h2>
       
       <div class="steps">
@@ -719,7 +836,7 @@
           <div class="step-number">2</div>
           <div class="step-content">
             <h3>SYNORA analysiert</h3>
-            <p>Ich durchsuche Schweizer Shops, verifiziere Produkte und bewerte sie nach deinen Kriterien.</p>
+            <p>Ich durchsuche Schweizer Shops, verifiziere Produkte mit Perplexity und bewerte sie nach deinen Kriterien.</p>
           </div>
         </div>
         
@@ -727,14 +844,93 @@
           <div class="step-number">3</div>
           <div class="step-content">
             <h3>Top 3 mit Begründung</h3>
-            <p>Du bekommst die 3 besten Produkte mit SYNORA Score und einer klaren Erklärung warum sie zu dir passen.</p>
+            <p>Du bekommst die 3 besten Produkte mit SYNORA Score und einer klaren Erklärung warum sie zu dir passen - und warum andere NICHT.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
+  <!-- ==========================================
+       AUTH SECTION (Register / Login / Forgot Password)
+       ========================================== -->
+  <section class="auth-section" id="auth">
+    <div class="section-content">
+      <h2 class="section-title">Konto erstellen oder anmelden</h2>
+      
+      <div class="auth-container">
+        <div class="auth-card">
+          <!-- Tabs -->
+          <div class="tabs">
+            <button class="tab active" data-tab="register">Registrieren</button>
+            <button class="tab" data-tab="login">Anmelden</button>
+          </div>
+
+          <!-- Messages -->
+          <div id="authMessage" class="message"></div>
+
+          <!-- Register Form -->
+          <div id="registerForm" class="form-container active">
+            <form id="registerFormEl">
+              <div class="form-group">
+                <label for="regName">Name</label>
+                <input type="text" id="regName" placeholder="Dein Name" required>
+              </div>
+              <div class="form-group">
+                <label for="regEmail">E-Mail</label>
+                <input type="email" id="regEmail" placeholder="deine@email.ch" required>
+              </div>
+              <div class="form-group">
+                <label for="regPassword">Passwort</label>
+                <input type="password" id="regPassword" placeholder="Mindestens 6 Zeichen" required minlength="6">
+              </div>
+              <button type="submit" class="btn-submit">Kostenlos registrieren 🚀</button>
+              <p class="form-footer">
+                Mit der Registrierung akzeptierst du unsere Nutzungsbedingungen.
+              </p>
+            </form>
+          </div>
+
+          <!-- Login Form -->
+          <div id="loginForm" class="form-container">
+            <form id="loginFormEl">
+              <div class="form-group">
+                <label for="loginEmail">E-Mail</label>
+                <input type="email" id="loginEmail" placeholder="deine@email.ch" required>
+              </div>
+              <div class="form-group">
+                <label for="loginPassword">Passwort</label>
+                <input type="password" id="loginPassword" placeholder="Dein Passwort" required>
+              </div>
+              <button type="submit" class="btn-submit">Anmelden →</button>
+              <p class="form-footer">
+                <a id="showForgotPassword">Passwort vergessen?</a>
+              </p>
+            </form>
+          </div>
+
+          <!-- Forgot Password Form -->
+          <div id="forgotForm" class="form-container">
+            <form id="forgotFormEl">
+              <p class="auth-subtitle">Gib deine E-Mail ein und wir senden dir einen Link zum Zurücksetzen.</p>
+              <div class="form-group">
+                <label for="forgotEmail">E-Mail</label>
+                <input type="email" id="forgotEmail" placeholder="deine@email.ch" required>
+              </div>
+              <button type="submit" class="btn-submit">Link senden 📧</button>
+              <p class="form-footer">
+                <a id="backToLogin">← Zurück zur Anmeldung</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       CTA SECTION
+       ========================================== -->
   <section class="cta">
     <div class="cta-content">
       <h2>Bereit für smartes Shopping?</h2>
@@ -743,9 +939,204 @@
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- ==========================================
+       FOOTER
+       ========================================== -->
   <footer class="footer">
     <p>SYNORA • KI-gestützte Produktempfehlungen • Made with ❤️ in der Schweiz</p>
   </footer>
+
+  <!-- ==========================================
+       JAVASCRIPT
+       ========================================== -->
+  <script>
+    const API_URL = 'https://api.synora.li';
+    
+    // Elements
+    const tabs = document.querySelectorAll('.tab');
+    const registerForm = document.getElementById('registerForm');
+    const loginForm = document.getElementById('loginForm');
+    const forgotForm = document.getElementById('forgotForm');
+    const messageEl = document.getElementById('authMessage');
+
+    // Tab Switching
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        registerForm.classList.remove('active');
+        loginForm.classList.remove('active');
+        forgotForm.classList.remove('active');
+        
+        if (tab.dataset.tab === 'register') {
+          registerForm.classList.add('active');
+        } else {
+          loginForm.classList.add('active');
+        }
+        
+        clearMessage();
+      });
+    });
+
+    // Show Forgot Password
+    document.getElementById('showForgotPassword').addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      registerForm.classList.remove('active');
+      loginForm.classList.remove('active');
+      forgotForm.classList.add('active');
+      clearMessage();
+    });
+
+    // Back to Login
+    document.getElementById('backToLogin').addEventListener('click', () => {
+      forgotForm.classList.remove('active');
+      loginForm.classList.add('active');
+      tabs[1].classList.add('active');
+      clearMessage();
+    });
+
+    // Message Functions
+    function showMessage(text, type) {
+      messageEl.textContent = text;
+      messageEl.className = 'message ' + type;
+    }
+
+    function clearMessage() {
+      messageEl.className = 'message';
+      messageEl.textContent = '';
+    }
+
+    // Register
+    document.getElementById('registerFormEl').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      
+      const btn = e.target.querySelector('.btn-submit');
+      btn.disabled = true;
+      btn.textContent = 'Wird registriert...';
+      
+      try {
+        const response = await fetch(API_URL + '/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.token) {
+          localStorage.setItem('token', data.token);
+          if (data.user) {
+            localStorage.setItem('user', JSON.stringify(data.user));
+          }
+          showMessage('Erfolgreich registriert! Du wirst weitergeleitet...', 'success');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1500);
+        } else {
+          showMessage(data.error || data.message || 'Registrierung fehlgeschlagen', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Kostenlos registrieren 🚀';
+        }
+      } catch (err) {
+        showMessage('Verbindungsfehler. Bitte versuche es erneut.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Kostenlos registrieren 🚀';
+      }
+    });
+
+    // Login
+    document.getElementById('loginFormEl').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      const btn = e.target.querySelector('.btn-submit');
+      btn.disabled = true;
+      btn.textContent = 'Wird angemeldet...';
+      
+      try {
+        const response = await fetch(API_URL + '/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.token) {
+          localStorage.setItem('token', data.token);
+          if (data.user) {
+            localStorage.setItem('user', JSON.stringify(data.user));
+          }
+          showMessage('Erfolgreich angemeldet! Du wirst weitergeleitet...', 'success');
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1500);
+        } else {
+          showMessage(data.error || data.message || 'Anmeldung fehlgeschlagen', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Anmelden →';
+        }
+      } catch (err) {
+        showMessage('Verbindungsfehler. Bitte versuche es erneut.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Anmelden →';
+      }
+    });
+
+    // Forgot Password
+    document.getElementById('forgotFormEl').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('forgotEmail').value;
+      
+      const btn = e.target.querySelector('.btn-submit');
+      btn.disabled = true;
+      btn.textContent = 'Wird gesendet...';
+      
+      try {
+        const response = await fetch(API_URL + '/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          showMessage('Falls ein Konto mit dieser E-Mail existiert, erhältst du einen Link zum Zurücksetzen.', 'success');
+          btn.textContent = 'Link gesendet ✓';
+        } else {
+          showMessage(data.error || data.message || 'Fehler beim Senden', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Link senden 📧';
+        }
+      } catch (err) {
+        showMessage('Verbindungsfehler. Bitte versuche es erneut.', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Link senden 📧';
+      }
+    });
+
+    // Check URL hash
+    if (window.location.hash === '#login') {
+      tabs[1].click();
+    } else if (window.location.hash === '#register' || window.location.hash === '#auth') {
+      tabs[0].click();
+      document.getElementById('auth').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Check if already logged in
+    const token = localStorage.getItem('token');
+    if (token) {
+      // User is logged in, could show different UI
+    }
+  </script>
 </body>
 </html>
