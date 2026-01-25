@@ -325,7 +325,7 @@ function App() {
     return (
       <div className="app loading-screen">
         <div className="loading-logo">
-          <img src="/img/synora-logo.jpeg" alt="SYNORA" />
+          <img src="/img/synora-logo.png" alt="SYNORA" />
           <div className="loading-glow"></div>
         </div>
         <p>Laden...</p>
@@ -347,7 +347,7 @@ function App() {
         <div className="header-content">
           <div className="logo">
             <div className="logo-glow"></div>
-            <img src="/img/synora-logo.jpeg" alt="SYNORA" className="logo-image" />
+            <img src="/img/synora-logo.png" alt="SYNORA" className="logo-image" />
             <h1>SYNORA</h1>
           </div>
           <div className="user-section">
@@ -388,7 +388,7 @@ function App() {
               <div className="welcome-message">
                 <div className="welcome-logo">
                   <div className="welcome-logo-glow"></div>
-                  <img src="/img/synora-logo.jpeg" alt="SYNORA" />
+                  <img src="/img/synora-logo.png" alt="SYNORA" />
                 </div>
                 <h2>Hallo{user ? ` ${user.name || ''}` : ''}! Ich bin <span className="highlight">SYNORA</span></h2>
                 <p>Ich helfe dir, das perfekte Produkt zu finden.</p>
@@ -410,7 +410,7 @@ function App() {
                       <span className="message-sender user-sender">Du</span>
                     ) : (
                       <span className="message-sender ai-sender">
-                        <img src="/img/synora-logo.jpeg" alt="" className="sender-icon" />
+                        <img src="/img/synora-logo.png" alt="" className="sender-icon" />
                         SYNORA
                       </span>
                     )}
@@ -488,7 +488,7 @@ function App() {
                 <div className="message-content glass-message loading-message">
                   <div className="message-header">
                     <span className="message-sender ai-sender">
-                      <img src="/img/synora-logo.jpeg" alt="" className="sender-icon" />
+                      <img src="/img/synora-logo.png" alt="" className="sender-icon" />
                       SYNORA
                     </span>
                   </div>
