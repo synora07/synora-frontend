@@ -20,6 +20,8 @@ function App() {
   const [conversationHistory, setConversationHistory] = useState([]);
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
+  // ⭐ NEU: Guest Info State
+  const [guestInfo, setGuestInfo] = useState(null);
   const messagesEndRef = useRef(null);
   const sessionId = useRef(getSessionId());
 
@@ -171,9 +173,11 @@ function App() {
       return;
     }
     
-    // Kein Token → zur Landing Page
+    // ⭐ GEÄNDERT: Kein Token → Guest-Modus erlauben (nicht redirect!)
+    // Guests können 3 Suchen machen
     if (!token) {
-      window.location.replace('/landing.html');
+      console.log('👤 Guest-Modus: 3 kostenlose Suchen');
+      setAuthChecked(true);
       return;
     }
     
@@ -203,7 +207,9 @@ function App() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Send Message - PRODUCTION
+  // ============================================
+  // ⭐ SEND MESSAGE - MIT GUEST LIMIT CHECK
+  // ============================================
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -217,13 +223,49 @@ function App() {
     setLoading(true);
 
     try {
+      const token = localStorage.getItem('token');
+      
       const response = await fetch('https://api.synora.li/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          // ⭐ Token nur wenn vorhanden (für eingeloggte User)
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        },
         body: JSON.stringify({ message: searchQuery, conversationHistory: newHistory })
       });
 
       const data = await response.json();
+      
+      // ============================================
+      // ⭐ GUEST LIMIT CHECK - Weiterleitung zur Registrierung
+      // ============================================
+      if (response.status === 403 && data.error === 'registration_required') {
+        console.log('🚫 Guest-Limit erreicht → Weiterleitung zur Registrierung');
+        
+        // Speichere die letzte Suche für nach der Registrierung
+        sessionStorage.setItem('synora_pending_search', searchQuery);
+        
+        // Zeige kurze Nachricht
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: '🔒 Du hast deine 3 kostenlosen Suchen aufgebraucht. Registriere dich jetzt kostenlos für unbegrenzten Zugang!'
+        }]);
+        
+        // Nach 2 Sekunden zur Registrierung weiterleiten
+        setTimeout(() => {
+          window.location.href = '/landing.html?register=true';
+        }, 2000);
+        
+        setLoading(false);
+        return;
+      }
+      
+      // ⭐ Guest Info speichern (wenn vorhanden)
+      if (data.guestInfo) {
+        setGuestInfo(data.guestInfo);
+        console.log(`👤 Guest: ${data.guestInfo.searchesUsed}/${data.guestInfo.searchesLimit} Suchen`);
+      }
       
       let productsWithReasons = data.products || [];
       if (data.productReasons && Array.isArray(data.productReasons)) {
@@ -383,11 +425,23 @@ function App() {
             <h1>SYNORA</h1>
           </div>
           <div className="user-section">
-            {user && (
+            {user ? (
               <>
                 <span className="user-name">👤 {user.name || user.email}</span>
                 <button className="logout-btn" onClick={handleLogout}>Logout</button>
               </>
+            ) : (
+              // ⭐ NEU: Guest-Anzeige mit Registrierungs-Button
+              <div className="guest-section">
+                {guestInfo && (
+                  <span className="guest-counter">
+                    🎁 {guestInfo.searchesRemaining} von {guestInfo.searchesLimit} Suchen übrig
+                  </span>
+                )}
+                <a href="/landing.html?register=true" className="register-btn">
+                  Kostenlos registrieren
+                </a>
+              </div>
             )}
           </div>
         </div>
@@ -395,12 +449,34 @@ function App() {
       </header>
 
       <div className="chat-container">
+        {/* ⭐ NEU: Guest Banner wenn nicht eingeloggt */}
+        {!user && guestInfo && (
+          <div className={`guest-banner ${guestInfo.searchesRemaining <= 1 ? 'warning' : ''}`}>
+            <span>
+              {guestInfo.searchesRemaining > 0 
+                ? `🎁 Noch ${guestInfo.searchesRemaining} kostenlose ${guestInfo.searchesRemaining === 1 ? 'Suche' : 'Suchen'}`
+                : '⚠️ Letzte kostenlose Suche aufgebraucht'
+              }
+            </span>
+            <a href="/landing.html?register=true" className="banner-register-btn">
+              Für unbegrenzte Suchen registrieren →
+            </a>
+          </div>
+        )}
+
         <div className="messages">
           {messages.length === 0 && (
             <div className="welcome-message">
               <h2>👋 Hallo{user ? ` ${user.name || ''}` : ''}! Ich bin SYNORA.</h2>
               <p>Ich helfe dir, das perfekte Produkt zu finden.</p>
               <p className="hint">Sag mir einfach was du suchst, z.B. "Ich brauche einen Laptop für Gaming"</p>
+              {/* ⭐ NEU: Hinweis für Guests */}
+              {!user && (
+                <p className="guest-hint">
+                  🎁 Du hast <strong>3 kostenlose Suchen</strong>. 
+                  <a href="/landing.html?register=true"> Registriere dich</a> für unbegrenzten Zugang!
+                </p>
+              )}
             </div>
           )}
 
