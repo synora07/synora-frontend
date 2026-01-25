@@ -20,13 +20,12 @@ function App() {
   const [conversationHistory, setConversationHistory] = useState([]);
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
-  // ⭐ NEU: Guest Info State
   const [guestInfo, setGuestInfo] = useState(null);
   const messagesEndRef = useRef(null);
   const sessionId = useRef(getSessionId());
 
   // ============================================
-  // 📊 ANALYTICS FUNCTIONS - PRODUCTION
+  // 📊 ANALYTICS FUNCTIONS
   // ============================================
   const API_URL = 'https://api.synora.li/api/analytics';
 
@@ -73,7 +72,6 @@ function App() {
           }))
         })
       });
-      console.log('📊 Search tracked:', query);
     } catch (e) { /* silent */ }
   }, []);
 
@@ -92,7 +90,6 @@ function App() {
           position
         })
       });
-      console.log('📊 Product click:', product.name);
     } catch (e) { /* silent */ }
   }, []);
 
@@ -112,12 +109,11 @@ function App() {
           product
         })
       });
-      console.log('📊 Shop click:', shopName);
     } catch (e) { /* silent */ }
   }, []);
 
   // ============================================
-  // 🧠 LEARNING FUNCTIONS - PRODUCTION
+  // 🧠 LEARNING FUNCTIONS
   // ============================================
   const PREFS_URL = 'https://api.synora.li/api/preferences';
 
@@ -130,7 +126,6 @@ function App() {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ query, category, budget })
       });
-      console.log('🧠 Learned from search:', query);
     } catch (e) { /* silent */ }
   }, []);
 
@@ -143,7 +138,6 @@ function App() {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ name, category, price, brand })
       });
-      console.log('🧠 Learned from product:', name);
     } catch (e) { /* silent */ }
   }, []);
 
@@ -156,45 +150,48 @@ function App() {
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ shopName })
       });
-      console.log('🧠 Learned from shop:', shopName);
     } catch (e) { /* silent */ }
   }, []);
 
   // ============================================
-  // AUTH CHECK + SESSION START
+  // AUTH CHECK
   // ============================================
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
     
-    // Wenn auf Landing Page → nichts tun
     if (window.location.pathname.includes('landing')) {
       setAuthChecked(true);
       return;
     }
     
-    // ⭐ GEÄNDERT: Kein Token → Guest-Modus erlauben (nicht redirect!)
-    // Guests können 3 Suchen machen
     if (!token) {
-      console.log('👤 Guest-Modus: 3 kostenlose Suchen');
+      setUser(null);
+      setGuestInfo({
+        isGuest: true,
+        searchesUsed: 0,
+        searchesRemaining: 3,
+        searchesLimit: 3
+      });
+      trackEvent('guest_session_start', { referrer: document.referrer });
       setAuthChecked(true);
       return;
     }
     
-    // Token vorhanden → Chat zeigen
     if (userData) {
       try {
         setUser(JSON.parse(userData));
+        setGuestInfo(null);
         trackEvent('login');
-      } catch (e) {}
+      } catch (e) {
+        console.error('User data parse error:', e);
+      }
     }
     
     trackEvent('session_start', { referrer: document.referrer });
     setAuthChecked(true);
-    
   }, [trackEvent]);
 
-  // Logout
   const handleLogout = () => {
     trackEvent('logout');
     localStorage.removeItem('token');
@@ -202,13 +199,12 @@ function App() {
     window.location.replace('/landing.html');
   };
 
-  // Auto-scroll
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   // ============================================
-  // ⭐ SEND MESSAGE - MIT GUEST LIMIT CHECK
+  // SEND MESSAGE
   // ============================================
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -229,7 +225,6 @@ function App() {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          // ⭐ Token nur wenn vorhanden (für eingeloggte User)
           ...(token && { 'Authorization': `Bearer ${token}` })
         },
         body: JSON.stringify({ message: searchQuery, conversationHistory: newHistory })
@@ -237,34 +232,22 @@ function App() {
 
       const data = await response.json();
       
-      // ============================================
-      // ⭐ GUEST LIMIT CHECK - Weiterleitung zur Registrierung
-      // ============================================
       if (response.status === 403 && data.error === 'registration_required') {
-        console.log('🚫 Guest-Limit erreicht → Weiterleitung zur Registrierung');
-        
-        // Speichere die letzte Suche für nach der Registrierung
-        sessionStorage.setItem('synora_pending_search', searchQuery);
-        
-        // Zeige kurze Nachricht
         setMessages(prev => [...prev, {
           role: 'assistant',
-          content: '🔒 Du hast deine 3 kostenlosen Suchen aufgebraucht. Registriere dich jetzt kostenlos für unbegrenzten Zugang!'
+          content: '🔒 Du hast deine 3 kostenlosen Suchen aufgebraucht. Registriere dich jetzt für unbegrenzten Zugang!'
         }]);
         
-        // Nach 2 Sekunden zur Registrierung weiterleiten
         setTimeout(() => {
-          window.location.href = '/landing.html?register=true';
+          window.location.href = '/landing.html#register';
         }, 2000);
         
         setLoading(false);
         return;
       }
-      
-      // ⭐ Guest Info speichern (wenn vorhanden)
+
       if (data.guestInfo) {
         setGuestInfo(data.guestInfo);
-        console.log(`👤 Guest: ${data.guestInfo.searchesUsed}/${data.guestInfo.searchesLimit} Suchen`);
       }
       
       let productsWithReasons = data.products || [];
@@ -275,10 +258,8 @@ function App() {
         });
       }
       
-      // 📊 TRACK SEARCH
       if (productsWithReasons.length > 0) {
         trackSearch(searchQuery, data.category || 'all', productsWithReasons.length, productsWithReasons);
-        // 🧠 LEARN FROM SEARCH
         learnFromSearch(searchQuery, data.category || 'all', data.budget);
       }
       
@@ -315,10 +296,8 @@ function App() {
     setTimeout(sendMessage, 100);
   };
 
-  // 📊 CLICK HANDLERS + 🧠 LEARNING
   const handleProductCardClick = (product, index) => {
     trackProductClick(product, index + 1);
-    // 🧠 Learn from this click
     const price = parseFloat(product.price?.toString().replace(/[^\d.,]/g, '')) || 0;
     learnFromProduct(product.name, product.category, price, product.brand);
   };
@@ -326,7 +305,6 @@ function App() {
   const handleShopLinkClick = (product) => {
     const shopName = product.shopName || product.source || 'Unknown';
     trackShopClick(shopName, product.shopUrl || product.link, { name: product.name, price: product.price });
-    // 🧠 Learn from this shop click
     learnFromShop(shopName);
   };
 
@@ -343,245 +321,218 @@ function App() {
       : ['Passt zu deiner Nutzung', 'Im Budget', 'Gutes Preis-Leistungs-Verhältnis'];
   };
 
-  const renderFormattedResponse = (content) => {
-    if (!content) return null;
-    
-    const sections = { checked: null, recommendation: null, whyThese: [], whyNot: [] };
-    
-    const checkedMatch = content.match(/🔍?\s*Geprüft:?\s*([^\n]+)/i);
-    if (checkedMatch) sections.checked = checkedMatch[1].trim();
-    
-    const recMatch = content.match(/Kurz gesagt:?\s*([^\.]+\.)/i);
-    if (recMatch) sections.recommendation = recMatch[1].trim();
-    
-    const whyTheseMatch = content.match(/Warum diese Auswahl\??\s*([\s\S]*?)(?=Warum nicht|$)/i);
-    if (whyTheseMatch) {
-      const points = whyTheseMatch[1].match(/[•\-\*]\s*([^\n•\-\*]+)/g);
-      if (points) sections.whyThese = points.map(p => p.replace(/^[•\-\*]\s*/, '').trim());
-    }
-    
-    const whyNotMatch = content.match(/Warum nicht[^?]*\??\s*([\s\S]*?)$/i);
-    if (whyNotMatch) {
-      const points = whyNotMatch[1].match(/[•\-\*]\s*([^\n•\-\*]+)/g);
-      if (points) sections.whyNot = points.map(p => p.replace(/^[•\-\*]\s*/, '').trim());
-    }
-    
-    if (!sections.checked && !sections.recommendation && !sections.whyThese.length) {
-      return <p>{content}</p>;
-    }
-    
+  if (!authChecked) {
     return (
-      <div className="response-boxes">
-        {sections.checked && (
-          <div className="info-box checked-box">
-            <div className="box-icon">🔍</div>
-            <div className="box-content">
-              <span className="box-label">GEPRÜFT</span>
-              <span className="box-text">{sections.checked}</span>
-            </div>
-          </div>
-        )}
-        {sections.recommendation && (
-          <div className="info-box recommendation-box">
-            <div className="box-icon">💡</div>
-            <div className="box-content">
-              <span className="box-label">MEINE EMPFEHLUNG</span>
-              <span className="box-text">{sections.recommendation}</span>
-            </div>
-          </div>
-        )}
-        {(sections.whyThese.length > 0 || sections.whyNot.length > 0) && (
-          <div className="comparison-boxes">
-            {sections.whyThese.length > 0 && (
-              <div className="info-box why-box">
-                <span className="box-label">✅ Warum diese?</span>
-                <ul className="box-list">{sections.whyThese.map((item, i) => <li key={i}>{item}</li>)}</ul>
-              </div>
-            )}
-            {sections.whyNot.length > 0 && (
-              <div className="info-box why-not-box">
-                <span className="box-label">❌ Warum nicht?</span>
-                <ul className="box-list">{sections.whyNot.map((item, i) => <li key={i}>{item}</li>)}</ul>
-              </div>
-            )}
-          </div>
-        )}
+      <div className="app loading-screen">
+        <div className="loading-logo">
+          <img src="/img/synora-logo.jpeg" alt="SYNORA" />
+          <div className="loading-glow"></div>
+        </div>
+        <p>Laden...</p>
       </div>
     );
-  };
-
-  if (!authChecked) {
-    return <div className="app" style={{display:'flex',justifyContent:'center',alignItems:'center',height:'100vh'}}>
-      <p>Laden...</p>
-    </div>;
   }
 
   return (
     <div className="app">
-      <header className="header">
+      {/* Animated Background */}
+      <div className="app-bg">
+        <div className="orb orb-1"></div>
+        <div className="orb orb-2"></div>
+        <div className="orb orb-3"></div>
+      </div>
+
+      {/* Header */}
+      <header className="header glass-card">
         <div className="header-content">
           <div className="logo">
-            <span className="logo-icon">🛍️</span>
+            <div className="logo-glow"></div>
+            <img src="/img/synora-logo.jpeg" alt="SYNORA" className="logo-image" />
             <h1>SYNORA</h1>
           </div>
           <div className="user-section">
             {user ? (
               <>
                 <span className="user-name">👤 {user.name || user.email}</span>
-                <button className="logout-btn" onClick={handleLogout}>Logout</button>
+                <button className="btn-logout" onClick={handleLogout}>Logout</button>
               </>
             ) : (
-              // ⭐ NEU: Guest-Anzeige mit Registrierungs-Button
-              <div className="guest-section">
-                {guestInfo && (
-                  <span className="guest-counter">
-                    🎁 {guestInfo.searchesRemaining} von {guestInfo.searchesLimit} Suchen übrig
-                  </span>
-                )}
-                <a href="/landing.html?register=true" className="register-btn">
-                  Kostenlos registrieren
-                </a>
-              </div>
+              <a href="/landing.html" className="btn-login">
+                Anmelden
+              </a>
             )}
           </div>
         </div>
-        <p className="tagline">Dein KI-Shopping Assistent</p>
       </header>
 
+      {/* Guest Banner */}
+      {guestInfo && guestInfo.isGuest && (
+        <div className={`guest-banner glass-card ${guestInfo.searchesRemaining <= 1 ? 'warning' : ''}`}>
+          <span className="guest-banner-text">
+            {guestInfo.searchesRemaining > 0 
+              ? `🎁 Noch ${guestInfo.searchesRemaining} kostenlose ${guestInfo.searchesRemaining === 1 ? 'Suche' : 'Suchen'}`
+              : '⚠️ Kostenlose Suchen aufgebraucht'
+            }
+          </span>
+          <a href="/landing.html" className="btn-primary btn-small">
+            Kostenlos registrieren →
+          </a>
+        </div>
+      )}
+
+      {/* Chat Container */}
       <div className="chat-container">
-        {/* ⭐ NEU: Guest Banner wenn nicht eingeloggt */}
-        {!user && guestInfo && (
-          <div className={`guest-banner ${guestInfo.searchesRemaining <= 1 ? 'warning' : ''}`}>
-            <span>
-              {guestInfo.searchesRemaining > 0 
-                ? `🎁 Noch ${guestInfo.searchesRemaining} kostenlose ${guestInfo.searchesRemaining === 1 ? 'Suche' : 'Suchen'}`
-                : '⚠️ Letzte kostenlose Suche aufgebraucht'
-              }
-            </span>
-            <a href="/landing.html?register=true" className="banner-register-btn">
-              Für unbegrenzte Suchen registrieren →
-            </a>
-          </div>
-        )}
-
-        <div className="messages">
-          {messages.length === 0 && (
-            <div className="welcome-message">
-              <h2>👋 Hallo{user ? ` ${user.name || ''}` : ''}! Ich bin SYNORA.</h2>
-              <p>Ich helfe dir, das perfekte Produkt zu finden.</p>
-              <p className="hint">Sag mir einfach was du suchst, z.B. "Ich brauche einen Laptop für Gaming"</p>
-              {/* ⭐ NEU: Hinweis für Guests */}
-              {!user && (
-                <p className="guest-hint">
-                  🎁 Du hast <strong>3 kostenlose Suchen</strong>. 
-                  <a href="/landing.html?register=true"> Registriere dich</a> für unbegrenzten Zugang!
-                </p>
-              )}
-            </div>
-          )}
-
-          {messages.map((msg, index) => (
-            <div key={index} className={`message ${msg.role}`}>
-              <div className="message-content">
-                <strong>{msg.role === 'user' ? 'Du' : 'SYNORA'}:</strong>
-                
-                {msg.role === 'assistant' && msg.products?.length > 0 ? (
-                  <div className="synora-response-boxes">{renderFormattedResponse(msg.content)}</div>
-                ) : (
-                  <p>{msg.content}</p>
+        <div className="messages-wrapper glass-card">
+          <div className="messages">
+            {messages.length === 0 && (
+              <div className="welcome-message">
+                <div className="welcome-logo">
+                  <div className="welcome-logo-glow"></div>
+                  <img src="/img/synora-logo.jpeg" alt="SYNORA" />
+                </div>
+                <h2>Hallo{user ? ` ${user.name || ''}` : ''}! Ich bin <span className="highlight">SYNORA</span></h2>
+                <p>Ich helfe dir, das perfekte Produkt zu finden.</p>
+                <p className="hint">Sag mir einfach was du suchst, z.B. "Ich brauche einen Laptop für Gaming"</p>
+                {guestInfo && guestInfo.isGuest && (
+                  <p className="guest-hint">
+                    💡 Du hast <strong>3 kostenlose Suchen</strong>. 
+                    <a href="/landing.html"> Registriere dich</a> für unbegrenzten Zugang!
+                  </p>
                 )}
+              </div>
+            )}
 
-                {msg.modelOptions?.length > 0 && (
-                  <div className="model-options">
-                    {msg.modelOptions.map((option, idx) => (
-                      <button key={idx} className="option-button" onClick={() => handleOptionClick(option)}>{option}</button>
-                    ))}
+            {messages.map((msg, index) => (
+              <div key={index} className={`message ${msg.role}`}>
+                <div className="message-content glass-message">
+                  <div className="message-header">
+                    {msg.role === 'user' ? (
+                      <span className="message-sender user-sender">Du</span>
+                    ) : (
+                      <span className="message-sender ai-sender">
+                        <img src="/img/synora-logo.jpeg" alt="" className="sender-icon" />
+                        SYNORA
+                      </span>
+                    )}
                   </div>
-                )}
+                  
+                  <p className="message-text">{msg.content}</p>
 
-                {msg.products?.length > 0 && (
-                  <div className="products">
-                    <h3>🏆 Top-3 Empfehlungen:</h3>
-                    {msg.products.map((product, idx) => (
-                      <div 
-                        key={idx} 
-                        className="product-card"
-                        onClick={() => handleProductCardClick(product, idx)}
-                      >
-                        <div className="product-image-container">
-                          {(product.imageUrl || product.image) ? (
-                            <img src={product.imageUrl || product.image} alt={product.name} className="product-image" onError={(e) => e.target.style.display = 'none'} />
-                          ) : (
-                            <div className="product-image-placeholder">📦</div>
-                          )}
-                        </div>
-                        <div className="product-info">
-                          <div className="product-header">
-                            <h4>#{idx + 1} {product.name}</h4>
-                            <span className={`synora-score ${getScoreColor(product.score || 85)}`}>SYNORA Score: {product.score || 85}/100</span>
-                          </div>
-                          <div className="product-price">
-                            <span className="price-current">{product.price}</span>
-                            {product.oldPrice && <span className="price-old">{product.oldPrice}</span>}
-                            {product.discount && <span className="price-discount">-{product.discount}%</span>}
-                          </div>
-                          <p className="product-shop">
-                            🛒 Shop: 
-                            <a 
-                              href={product.shopUrl || product.link} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              onClick={(e) => { e.stopPropagation(); handleShopLinkClick(product); }}
-                            >
-                              {product.shopName || product.source || 'Shop'}
-                            </a>
-                          </p>
-                          <div className="why-it-fits">
-                            <span className="why-label">Passt zu dir, weil:</span>
-                            <ul className="why-list">{getWhyItFits(product).slice(0, 3).map((reason, i) => <li key={i}>{reason}</li>)}</ul>
-                          </div>
-                          {product.badges && (
-                            <div className="product-badges">
-                              {product.badges.map((badge, i) => <span key={i} className={`badge ${badge.toLowerCase()}`}>{badge}</span>)}
+                  {msg.modelOptions?.length > 0 && (
+                    <div className="model-options">
+                      {msg.modelOptions.map((option, idx) => (
+                        <button key={idx} className="option-button glass-button" onClick={() => handleOptionClick(option)}>
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {msg.products?.length > 0 && (
+                    <div className="products">
+                      <h3 className="products-title">🏆 Top-3 Empfehlungen</h3>
+                      <div className="products-grid">
+                        {msg.products.map((product, idx) => (
+                          <div 
+                            key={idx} 
+                            className="product-card glass-product"
+                            onClick={() => handleProductCardClick(product, idx)}
+                          >
+                            <div className="product-rank">#{idx + 1}</div>
+                            <div className="product-image-container">
+                              {(product.imageUrl || product.image) ? (
+                                <img src={product.imageUrl || product.image} alt={product.name} className="product-image" onError={(e) => e.target.style.display = 'none'} />
+                              ) : (
+                                <div className="product-image-placeholder">📦</div>
+                              )}
                             </div>
-                          )}
-                        </div>
+                            <div className="product-info">
+                              <h4 className="product-name">{product.name}</h4>
+                              <div className={`synora-score ${getScoreColor(product.score || 85)}`}>
+                                <span className="score-label">SYNORA Score</span>
+                                <span className="score-value">{product.score || 85}/100</span>
+                              </div>
+                              <div className="product-price">
+                                <span className="price-current">{product.price}</span>
+                                {product.oldPrice && <span className="price-old">{product.oldPrice}</span>}
+                              </div>
+                              <a 
+                                href={product.shopUrl || product.link} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="product-shop-link"
+                                onClick={(e) => { e.stopPropagation(); handleShopLinkClick(product); }}
+                              >
+                                🛒 {product.shopName || product.source || 'Zum Shop'}
+                              </a>
+                              <div className="why-it-fits">
+                                <span className="why-label">✓ Passt zu dir:</span>
+                                <ul className="why-list">
+                                  {getWhyItFits(product).slice(0, 2).map((reason, i) => (
+                                    <li key={i}>{reason}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
 
-          {loading && (
-            <div className="message assistant">
-              <div className="message-content">
-                <strong>SYNORA:</strong>
-                <p className="typing">Suche nach den besten Produkten für dich...</p>
+            {loading && (
+              <div className="message assistant">
+                <div className="message-content glass-message loading-message">
+                  <div className="message-header">
+                    <span className="message-sender ai-sender">
+                      <img src="/img/synora-logo.jpeg" alt="" className="sender-icon" />
+                      SYNORA
+                    </span>
+                  </div>
+                  <div className="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <p className="typing-text">Suche nach den besten Produkten...</p>
+                </div>
               </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
+            )}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
 
-        <div className="input-container">
+        {/* Input */}
+        <div className="input-container glass-card">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Frag mich nach Produkten... (z.B. 'Laptop für Studenten')"
-            rows="2"
+            placeholder="Was suchst du? (z.B. 'Laptop für Studenten unter 1000 CHF')"
+            rows="1"
             disabled={loading}
+            className="chat-input"
           />
-          <button onClick={sendMessage} disabled={loading || !input.trim()}>
-            {loading ? '⏳' : '➤'} Senden
+          <button 
+            onClick={sendMessage} 
+            disabled={loading || !input.trim()}
+            className="btn-send"
+          >
+            {loading ? (
+              <span className="send-loading"></span>
+            ) : (
+              <span>➤</span>
+            )}
           </button>
         </div>
       </div>
 
+      {/* Footer */}
       <footer className="footer">
-        <p>SYNORA - KI-gestützte Produktempfehlungen | Made with ❤️</p>
+        <p>SYNORA • KI-gestützte Produktempfehlungen</p>
       </footer>
     </div>
   );
