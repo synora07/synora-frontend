@@ -142,8 +142,8 @@ body {
 
 .loading-logo {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
 }
 
 .loading-logo img {
@@ -152,21 +152,11 @@ body {
   object-fit: contain;
   position: relative;
   z-index: 2;
-  animation: logoFloat 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px var(--primary-glow));
+  filter: drop-shadow(0 0 10px rgba(46, 139, 87, 0.4));
 }
 
 .loading-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
-  filter: blur(20px);
-  animation: glowPulse 2s ease-in-out infinite;
-  z-index: 1;
+  display: none; /* Glow-Box entfernt */
 }
 
 /* ==========================================
@@ -198,14 +188,7 @@ body {
 }
 
 .logo-glow {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  left: -5px;
-  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
-  filter: blur(15px);
-  animation: glowPulse 3s ease-in-out infinite;
-  z-index: 0;
+  display: none; /* Viereck entfernt */
 }
 
 .logo-image {
@@ -214,8 +197,7 @@ body {
   object-fit: contain;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 0 10px var(--primary-glow));
-  animation: logoGlow 3s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 8px rgba(46, 139, 87, 0.4));
 }
 
 .logo h1 {
@@ -382,8 +364,8 @@ body {
 
 .welcome-logo {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   margin: 0 auto 24px;
 }
 
@@ -393,20 +375,11 @@ body {
   object-fit: contain;
   position: relative;
   z-index: 2;
-  animation: logoFloat 4s ease-in-out infinite, logoGlow 3s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 10px rgba(46, 139, 87, 0.3));
 }
 
 .welcome-logo-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 180px;
-  height: 180px;
-  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
-  filter: blur(25px);
-  animation: glowPulse 3s ease-in-out infinite;
-  z-index: 1;
+  display: none; /* Glow-Box entfernt */
 }
 
 .welcome-message h2 {
