@@ -416,7 +416,13 @@ function App() {
                     )}
                   </div>
                   
-                  <p className="message-text">{msg.content}</p>
+                  <div className="message-text">
+                    {msg.content.split('\n').map((line, i) => (
+                      <p key={i} style={{margin: line.trim() === '' ? '8px 0' : '4px 0'}}>
+                        {line || '\u00A0'}
+                      </p>
+                    ))}
+                  </div>
 
                   {msg.modelOptions?.length > 0 && (
                     <div className="model-options">
@@ -457,13 +463,13 @@ function App() {
                                 {product.oldPrice && <span className="price-old">{product.oldPrice}</span>}
                               </div>
                               <a 
-                                href={product.shopUrl || product.link} 
+                                href={product.shopUrl || product.link || `https://www.google.ch/search?tbm=shop&q=${encodeURIComponent(product.name)}`} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="product-shop-link"
                                 onClick={(e) => { e.stopPropagation(); handleShopLinkClick(product); }}
                               >
-                                🛒 {product.shopName || product.source || 'Zum Shop'}
+                                🛒 {product.shopName || product.source || 'Zum Shop'} →
                               </a>
                               <div className="why-it-fits">
                                 <span className="why-label">✓ Passt zu dir:</span>
