@@ -196,7 +196,7 @@ function App() {
     trackEvent('logout');
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.replace('/landing.html');
+    window.location.replace('https://www.synora.li/landing.html');
   };
 
   useEffect(() => {
@@ -239,7 +239,7 @@ function App() {
         }]);
         
         setTimeout(() => {
-          window.location.href = '/landing.html#register';
+          window.location.href = 'https://www.synora.li/landing.html#register';
         }, 2000);
         
         setLoading(false);
@@ -357,7 +357,7 @@ function App() {
                 <button className="btn-logout" onClick={handleLogout}>Logout</button>
               </>
             ) : (
-              <a href="/landing.html" className="btn-login">
+              <a href="https://www.synora.li/landing.html" className="btn-login">
                 Anmelden
               </a>
             )}
@@ -374,7 +374,7 @@ function App() {
               : '⚠️ Kostenlose Suchen aufgebraucht'
             }
           </span>
-          <a href="/landing.html" className="btn-primary btn-small">
+          <a href="https://www.synora.li/landing.html" className="btn-primary btn-small">
             Kostenlos registrieren →
           </a>
         </div>
@@ -396,7 +396,7 @@ function App() {
                 {guestInfo && guestInfo.isGuest && (
                   <p className="guest-hint">
                     💡 Du hast <strong>3 kostenlose Suchen</strong>. 
-                    <a href="/landing.html"> Registriere dich</a> für unbegrenzten Zugang!
+                    <a href="https://www.synora.li/landing.html"> Registriere dich</a> für unbegrenzten Zugang!
                   </p>
                 )}
               </div>
