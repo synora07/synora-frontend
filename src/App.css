@@ -494,7 +494,8 @@ body {
 
 .message-text {
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.7;
+  white-space: pre-line;
 }
 
 /* ==========================================
