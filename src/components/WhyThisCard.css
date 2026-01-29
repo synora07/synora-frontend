@@ -1,0 +1,135 @@
+.why-this-card {
+  background: rgba(46, 139, 87, 0.08);
+  border: 1px solid rgba(46, 139, 87, 0.25);
+  border-radius: 12px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.why-this-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.why-this-header:hover {
+  background: rgba(46, 139, 87, 0.1);
+}
+
+.why-this-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2E8B57;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.why-this-icon {
+  font-size: 1.1rem;
+}
+
+.why-this-arrow {
+  color: #2E8B57;
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.why-this-content {
+  padding: 0 16px 16px 16px;
+}
+
+.why-section {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #4ade80;
+}
+
+.section-title.warning {
+  color: #fbbf24;
+}
+
+.section-title.blue {
+  color: #60a5fa;
+}
+
+.section-icon {
+  font-size: 0.9rem;
+}
+
+.why-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.why-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 0.9rem;
+  color: #e8e8e8;
+}
+
+.item-bullet {
+  flex-shrink: 0;
+  width: 18px;
+  font-weight: bold;
+}
+
+.why-item.good .item-bullet {
+  color: #4ade80;
+}
+
+.why-item.bad .item-bullet {
+  color: #fbbf24;
+}
+
+.why-section.conclusion {
+  background: rgba(96, 165, 250, 0.1);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.match-text {
+  color: #e8e8e8;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.match-text strong {
+  color: #60a5fa;
+}
+
+.conclusion-text {
+  color: #a8a8a8;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.honesty-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  color: #888;
+  font-size: 0.8rem;
+  font-style: italic;
+}
