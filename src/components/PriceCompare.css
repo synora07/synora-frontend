@@ -1,0 +1,144 @@
+.price-compare {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px 0;
+}
+
+.compare-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.compare-icon {
+  font-size: 1.1rem;
+}
+
+.compare-title {
+  color: #e8e8e8;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.compare-table {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.table-header,
+.table-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 0.8fr 1.2fr;
+  gap: 8px;
+  padding: 10px 12px;
+}
+
+.table-header {
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.table-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.85rem;
+  transition: background 0.2s ease;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.table-row.recommended {
+  background: rgba(46, 139, 87, 0.08);
+  border-left: 3px solid #2E8B57;
+}
+
+.shop-col {
+  color: #e8e8e8;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.lowest-badge {
+  background: rgba(74, 222, 128, 0.2);
+  color: #4ade80;
+  font-size: 0.65rem;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.price-col {
+  color: #e8e8e8;
+  font-family: 'Space Grotesk', monospace;
+  font-weight: 600;
+}
+
+.delivery-col {
+  color: #a8a8a8;
+}
+
+.note-col {
+  font-size: 0.8rem;
+}
+
+.note-col .warning {
+  color: #fbbf24;
+}
+
+.note-col .note {
+  color: #60a5fa;
+}
+
+.compare-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(96, 165, 250, 0.08);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  color: #a8a8a8;
+}
+
+.compare-tip strong {
+  color: #60a5fa;
+}
+
+.neutral-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  color: #888;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .delivery-col,
+  .note-col {
+    display: none;
+  }
+}
