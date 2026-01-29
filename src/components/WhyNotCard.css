@@ -1,0 +1,142 @@
+.why-not-card {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 12px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.why-not-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.why-not-header:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.why-not-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f87171;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.why-not-icon {
+  font-size: 1rem;
+}
+
+.alt-count {
+  color: #888;
+  font-weight: 400;
+  font-size: 0.85rem;
+}
+
+.why-not-arrow {
+  color: #f87171;
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.why-not-arrow.open {
+  transform: rotate(90deg);
+}
+
+.why-not-content {
+  padding: 0 16px 16px 16px;
+}
+
+.why-not-intro {
+  color: #a8a8a8;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.alt-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.alt-name {
+  color: #e8e8e8;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.alt-section {
+  margin-bottom: 10px;
+}
+
+.alt-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.alt-section.good .alt-label {
+  color: #4ade80;
+}
+
+.alt-section.bad .alt-label {
+  color: #f87171;
+}
+
+.alt-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0 16px;
+}
+
+.alt-section li {
+  color: #a8a8a8;
+  font-size: 0.85rem;
+  padding: 3px 0;
+}
+
+.alt-section li::before {
+  content: "•";
+  margin-right: 8px;
+  color: #666;
+}
+
+.not-for-you {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid #f87171;
+  font-size: 0.85rem;
+  color: #e8e8e8;
+}
+
+.not-for-you strong {
+  color: #f87171;
+}
+
+.honesty-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  color: #888;
+  font-size: 0.8rem;
+  font-style: italic;
+}
