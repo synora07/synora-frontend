@@ -1,0 +1,369 @@
+/* ============================================
+   SYNORA - SMART SUGGESTION CSS
+   Feature 11: KI Vorschläge
+   ============================================ */
+
+.smart-suggestion {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.08), rgba(46, 139, 87, 0.05));
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 16px 0;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Header */
+.suggestion-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  background: rgba(251, 191, 36, 0.1);
+  border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.header-icon {
+  font-size: 2rem;
+}
+
+.header-content {
+  flex: 1;
+}
+
+.header-title {
+  color: #fbbf24;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.header-subtitle {
+  color: #a8a8a8;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.header-subtitle strong {
+  color: #e8e8e8;
+}
+
+/* KI Erklärung */
+.ai-explanation {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(46, 139, 87, 0.05);
+}
+
+.ai-avatar {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.ai-bubble {
+  flex: 1;
+  background: rgba(46, 139, 87, 0.1);
+  border: 1px solid rgba(46, 139, 87, 0.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.ai-intro {
+  color: #4ade80;
+  font-size: 0.95rem;
+  margin: 0 0 8px 0;
+}
+
+.ai-text {
+  color: #e8e8e8;
+  font-size: 0.9rem;
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.ai-honest {
+  color: #a8a8a8;
+  font-size: 0.85rem;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Alternativen Section */
+.alternatives-section {
+  padding: 16px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e8e8e8;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 14px 0;
+}
+
+.alternatives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Alternative Card */
+.alternative-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 14px;
+  transition: all 0.2s ease;
+}
+
+.alternative-card:hover {
+  border-color: rgba(46, 139, 87, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Alt Header */
+.alt-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.alt-rank {
+  background: linear-gradient(135deg, #2E8B57, #3da86d);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.alt-info {
+  flex: 1;
+}
+
+.alt-name {
+  color: #e8e8e8;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 2px 0;
+}
+
+.alt-price {
+  color: #4ade80;
+  font-family: 'Space Grotesk', monospace;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.match-badge {
+  background: rgba(96, 165, 250, 0.2);
+  color: #60a5fa;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Warum ähnlich */
+.why-similar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(96, 165, 250, 0.1);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.similar-icon {
+  font-size: 0.9rem;
+}
+
+.similar-text {
+  color: #a8a8a8;
+  font-size: 0.85rem;
+}
+
+/* Unterschiede */
+.differences {
+  margin-bottom: 12px;
+}
+
+.diff-label {
+  color: #888888;
+  font-size: 0.8rem;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.differences ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.differences li {
+  color: #a8a8a8;
+  font-size: 0.85rem;
+  padding: 3px 0 3px 16px;
+  position: relative;
+}
+
+.differences li::before {
+  content: "↔";
+  position: absolute;
+  left: 0;
+  color: #60a5fa;
+}
+
+/* Vorteile/Nachteile */
+.alt-section {
+  margin-bottom: 10px;
+}
+
+.section-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.alt-section.good .section-label {
+  color: #4ade80;
+}
+
+.alt-section.bad .section-label {
+  color: #fbbf24;
+}
+
+.alt-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.alt-section li {
+  color: #a8a8a8;
+  font-size: 0.85rem;
+  padding: 3px 0 3px 16px;
+  position: relative;
+}
+
+.alt-section.good li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #4ade80;
+}
+
+.alt-section.bad li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #fbbf24;
+}
+
+/* KI Fazit */
+.ai-fazit {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(46, 139, 87, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #2E8B57;
+  margin-top: 10px;
+}
+
+.ai-fazit span:last-child {
+  color: #e8e8e8;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* Keine Alternativen */
+.no-alternatives {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 16px;
+}
+
+.no-alternatives > span:first-child {
+  font-size: 2rem;
+}
+
+.no-alternatives strong {
+  color: #e8e8e8;
+  font-size: 0.95rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.no-alternatives p {
+  color: #888888;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Lern-Hinweis */
+.learning-note {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(139, 92, 246, 0.1);
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.learning-note > span:first-child {
+  font-size: 1.2rem;
+}
+
+.learning-note div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.learning-note strong {
+  color: #a78bfa;
+  font-size: 0.85rem;
+}
+
+.learning-note span {
+  color: #888888;
+  font-size: 0.8rem;
+}
+
+/* Ehrlichkeits-Hinweis */
+.honesty-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #888888;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .suggestion-header {
+    padding: 14px;
+  }
+
+  .alt-header {
+    flex-wrap: wrap;
+  }
+
+  .match-badge {
+    margin-top: 8px;
+  }
+}
