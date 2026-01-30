@@ -1,0 +1,326 @@
+/* ============================================
+   SYNORA - TRUST MESSAGES CSS
+   Feature 12: Die 7 Vertrauens-Versprechen
+   ============================================ */
+
+/* Mini Variante */
+.trust-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(46, 139, 87, 0.1);
+  border: 1px solid rgba(46, 139, 87, 0.2);
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.trust-mini-icon {
+  font-size: 0.9rem;
+}
+
+.trust-mini-text {
+  color: #4ade80;
+  font-weight: 500;
+}
+
+/* Header Bar Variante */
+.trust-header-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.trust-header-bar span {
+  color: #4ade80;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Haupt-Container */
+.trust-messages {
+  background: linear-gradient(135deg, rgba(46, 139, 87, 0.1), rgba(46, 139, 87, 0.05));
+  border: 1px solid rgba(46, 139, 87, 0.3);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 16px 0;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Header */
+.trust-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.trust-header:hover {
+  background: rgba(46, 139, 87, 0.1);
+}
+
+.trust-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.trust-icon {
+  font-size: 1.4rem;
+}
+
+.trust-title span:last-child {
+  color: #2E8B57;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.trust-arrow {
+  color: #2E8B57;
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.trust-arrow.open {
+  transform: rotate(0deg);
+}
+
+/* Intro */
+.trust-intro {
+  padding: 0 16px 14px 16px;
+  border-bottom: 1px solid rgba(46, 139, 87, 0.15);
+}
+
+.trust-intro p {
+  color: #a8a8a8;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.trust-intro strong {
+  color: #4ade80;
+}
+
+/* Content */
+.trust-content {
+  padding: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Promises Liste */
+.promises-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* Einzelnes Versprechen */
+.promise-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px;
+  transition: all 0.2s ease;
+}
+
+.promise-card:hover {
+  border-color: rgba(46, 139, 87, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.promise-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.promise-icon {
+  font-size: 1.3rem;
+}
+
+.promise-title {
+  color: #e8e8e8;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.promise-text {
+  color: #a8a8a8;
+  font-size: 0.85rem;
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.promise-example {
+  color: #888888;
+  font-size: 0.8rem;
+  font-style: italic;
+  margin: 0;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  border-left: 3px solid rgba(46, 139, 87, 0.4);
+}
+
+.example-label {
+  color: #4ade80;
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* Was SYNORA NICHT ist */
+.trust-not {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.trust-not h4 {
+  color: #f87171;
+  font-size: 0.9rem;
+  margin: 0 0 10px 0;
+}
+
+.trust-not ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.trust-not li {
+  color: #a8a8a8;
+  font-size: 0.85rem;
+  padding: 4px 0 4px 20px;
+  position: relative;
+}
+
+.trust-not li::before {
+  content: "✗";
+  position: absolute;
+  left: 0;
+  color: #f87171;
+}
+
+/* Was SYNORA IST */
+.trust-is {
+  background: rgba(46, 139, 87, 0.1);
+  border: 1px solid rgba(46, 139, 87, 0.3);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.trust-is h4 {
+  color: #4ade80;
+  font-size: 0.9rem;
+  margin: 0 0 10px 0;
+}
+
+.trust-is ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.trust-is li {
+  color: #e8e8e8;
+  font-size: 0.85rem;
+  padding: 4px 0 4px 20px;
+  position: relative;
+}
+
+.trust-is li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #4ade80;
+  font-weight: bold;
+}
+
+/* Zitat */
+.trust-quote {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.quote-icon {
+  font-size: 1.5rem;
+}
+
+.trust-quote p {
+  color: #a8a8a8;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Feedback */
+.trust-feedback {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  background: rgba(96, 165, 250, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  border-radius: 10px;
+}
+
+.trust-feedback > span:first-child {
+  font-size: 1.3rem;
+}
+
+.trust-feedback div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.trust-feedback strong {
+  color: #60a5fa;
+  font-size: 0.9rem;
+}
+
+.trust-feedback p {
+  color: #a8a8a8;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .trust-messages {
+    margin: 12px 0;
+  }
+
+  .promise-card {
+    padding: 12px;
+  }
+
+  .trust-header-bar {
+    gap: 8px;
+  }
+}
