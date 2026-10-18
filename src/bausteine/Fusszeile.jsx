@@ -26,7 +26,7 @@ import Logo from './Logo';
 import { useSprache } from '../texte/Sprache';
 import './Fusszeile.css';
 
-const KONTAKT_MAIL = 'hallo@synora.li';
+const KONTAKT_MAIL = 'info@synora.li';
 
 export default function Fusszeile() {
   const { t } = useSprache();

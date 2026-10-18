@@ -108,7 +108,7 @@ const ANGABEN = {
   name: 'Pavinash Kugathayalan',
   adresse: 'Flughafenstrasse 12, 8302 Kloten',
   ort: 'Kloten',
-  email: 'hallo@synora.li',
+  email: 'info@synora.li',
 
   // Leer, weil nicht eingetragen. Eine UID wird erst vergeben, wenn
   // man im Handelsregister, bei der MWST oder als Selbstaendiger bei
