@@ -1,0 +1,251 @@
+/* ============================================
+   SYNORA - Kopfzeile
+   ============================================ */
+
+.sy-kopf {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  width: 100%;
+  transition: background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+/* Ganz oben durchsichtig, damit das Hintergrundbild
+   durchscheint. Beim Scrollen dunkel - sonst steht weisse
+   Schrift ueber hellen Bildstellen und ist unlesbar. */
+.sy-kopf-gescrollt {
+  background: rgba(5, 11, 26, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom-color: var(--border);
+}
+
+.sy-kopf-innen {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.sy-kopf-logo {
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+/* ==========================================
+   MENUE
+   ========================================== */
+.sy-kopf-menue {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 12px;
+}
+
+.sy-kopf-menue a {
+  position: relative;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: color 0.2s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.sy-kopf-menue a:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sy-kopf-aktiv {
+  color: var(--text) !important;
+}
+
+/* Der Strich unter dem aktiven Punkt - wie in deiner Vorlage
+   beim "KI Assistent". */
+.sy-kopf-aktiv::after {
+  content: '';
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gradient-brand);
+}
+
+/* ==========================================
+   RECHTE SEITE
+   ========================================== */
+.sy-kopf-rechts {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+/* ---------- Sprache ---------- */
+.sy-sprache {
+  display: inline-flex;
+  padding: 3px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 9px;
+}
+
+.sy-sprache button {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  padding: 5px 9px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sy-sprache button:hover {
+  color: var(--text);
+}
+
+.sy-sprache .sy-sprache-an {
+  background: rgba(var(--primary-rgb), 0.18);
+  color: var(--primary-light);
+}
+
+/* ---------- Knoepfe ---------- */
+.sy-kopf-knopf-leer,
+.sy-kopf-knopf-voll {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 9px 18px;
+  border-radius: 9px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+}
+
+.sy-kopf-knopf-leer {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+}
+
+.sy-kopf-knopf-leer:hover {
+  border-color: var(--primary);
+  color: var(--primary-light);
+}
+
+.sy-kopf-knopf-voll {
+  background: var(--gradient-brand);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 18px rgba(var(--primary-rgb), 0.32);
+}
+
+.sy-kopf-knopf-voll:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 26px rgba(var(--primary-rgb), 0.46);
+}
+
+/* ==========================================
+   HANDY
+   ========================================== */
+.sy-kopf-burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  padding: 10px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.sy-kopf-burger span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--text);
+}
+
+.sy-kopf-klapp {
+  background: rgba(5, 11, 26, 0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
+  padding: 14px 24px 22px;
+}
+
+.sy-kopf-klapp nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.sy-kopf-klapp nav a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.05rem;
+  padding: 14px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Der Sprachumschalter im Klappmenue. Hier mit ganzen
+   Sprachnamen statt "DE"/"EN" - es ist Platz da, und
+   "Deutsch" versteht jeder sofort. */
+.sy-sprache-klapp {
+  display: flex;
+  width: 100%;
+  margin-top: 18px;
+}
+
+.sy-sprache-klapp button {
+  flex: 1;
+  font-size: 0.9rem;
+  padding: 10px;
+}
+
+.sy-kopf-klapp-unten {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.sy-kopf-klapp-unten > * {
+  flex: 1;
+  text-align: center;
+}
+
+@media (max-width: 1020px) {
+  .sy-kopf-menue { display: none; }
+  .sy-kopf-burger { display: flex; }
+}
+
+@media (max-width: 680px) {
+  .sy-kopf-innen { padding: 12px 16px; gap: 12px; }
+
+  /* Auf dem Handy bleibt nur "Kostenlos starten" sichtbar -
+     der wichtigste Knopf. Der Rest steckt im Klappmenue. */
+  .sy-kopf-rechts .sy-kopf-knopf-leer { display: none; }
+  .sy-kopf-klapp-unten .sy-kopf-knopf-leer { display: block; }
+}
+
+@media (max-width: 430px) {
+  .sy-sprache { display: none; }
+  .sy-kopf-rechts .sy-kopf-knopf-voll { padding: 9px 13px; font-size: 0.85rem; }
+}

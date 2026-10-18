@@ -1,0 +1,398 @@
+/* ============================================
+   SYNORA - Produktkarte
+   ============================================ */
+
+.pk-karte {
+  position: relative;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 20px;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pk-karte:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.34), 0 0 24px rgba(var(--primary-rgb), 0.1);
+}
+
+.pk-rang {
+  position: absolute;
+  top: -9px;
+  left: 16px;
+  background: var(--gradient-brand);
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  min-width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 7px;
+  border-radius: 12px;
+}
+
+/* ==========================================
+   OBEN
+   ========================================== */
+.pk-oben {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.pk-bild {
+  flex-shrink: 0;
+  width: 92px;
+  height: 92px;
+  border-radius: 12px;
+  overflow: hidden;
+  /* Produktbilder aus Shops haben fast immer weissen
+     Hintergrund. Auf Weiss sehen sie aus wie gewollt, auf dem
+     dunklen Grund wie ausgeschnitten. */
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pk-bild img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+
+/* Weiss ist richtig, SOLANGE ein Bild da ist - Produktfotos aus
+   Shops haben fast immer weissen Hintergrund. Ist keines da,
+   steht sonst ein grosser weisser Kasten in der dunklen Karte
+   und zieht mehr Aufmerksamkeit auf sich als das Produkt. */
+.pk-bild-ohne {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+}
+
+.pk-bild-leer {
+  font-size: 1.8rem;
+  opacity: 0.35;
+}
+
+.pk-kopf { flex: 1; min-width: 0; }
+
+.pk-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: 7px;
+}
+
+.pk-preiszeile {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.pk-preis {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.pk-shop {
+  font-size: 0.84rem;
+  color: var(--text-dim);
+}
+
+/* ---------- Score ---------- */
+.pk-punkte {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.pk-punkte strong { font-size: 0.95rem; font-weight: 700; }
+.pk-punkte small  { font-size: 0.7rem; opacity: 0.65; }
+
+.pk-punkte-wort {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.66rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-left: 3px;
+}
+
+.pk-punkte-sehrgut { background: rgba(var(--primary-rgb), 0.2);  color: var(--accent-cyan); }
+.pk-punkte-gut     { background: rgba(var(--primary-rgb), 0.13); color: var(--primary-light); }
+.pk-punkte-mittel  { background: rgba(234, 179, 8, 0.15);        color: var(--score-mittel); }
+.pk-punkte-schwach { background: rgba(239, 68, 68, 0.15);        color: var(--score-schlecht); }
+
+/* ==========================================
+   VORTEILE UND NACHTEILE
+   ==========================================
+   Zwei Spalten, GLEICHE Breite, GLEICHE Schriftgroesse. Der
+   Nachteil ist nicht das Kleingedruckte - er ist der Grund,
+   warum jemand SYNORA statt Google benutzt. */
+.pk-gruende {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  padding: 15px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 15px;
+}
+
+.pk-spalte-titel {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  margin-bottom: 9px;
+}
+
+.pk-dafuer-titel  { color: var(--primary-light); }
+.pk-dagegen-titel { color: #f0727a; }
+
+.pk-gruende ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pk-gruende li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+  padding: 3px 0;
+}
+
+.pk-ja   { color: var(--primary-light); flex-shrink: 0; font-weight: 700; }
+.pk-nein { color: #f0727a;              flex-shrink: 0; font-weight: 700; }
+
+/* ==========================================
+   KNOEPFE
+   ========================================== */
+.pk-knoepfe {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.pk-knopf-voll,
+.pk-knopf-glocke {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 11px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.22s ease;
+  white-space: nowrap;
+}
+
+.pk-knopf-voll {
+  flex: 1;
+  min-width: 130px;
+  background: var(--gradient-brand);
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.3);
+}
+
+.pk-knopf-voll:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 22px rgba(var(--primary-rgb), 0.45);
+}
+
+.pk-knopf-glocke {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+}
+
+.pk-knopf-glocke:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary-light);
+}
+
+.pk-knopf-glocke:disabled { opacity: 0.55; cursor: wait; }
+
+.pk-glocke-an {
+  border-color: var(--primary) !important;
+  color: var(--primary-light) !important;
+  background: rgba(var(--primary-rgb), 0.1) !important;
+}
+
+/* ==========================================
+   MELDUNGEN
+   ========================================== */
+.pk-meldung {
+  font-size: 0.84rem;
+  line-height: 1.5;
+  margin-top: 11px;
+  padding: 9px 12px;
+  border-radius: 9px;
+}
+
+.pk-meldung-ok {
+  background: rgba(var(--primary-rgb), 0.1);
+  border: 1px solid var(--border-glow);
+  color: var(--primary-light);
+}
+
+.pk-meldung-fehler {
+  background: rgba(240, 114, 122, 0.1);
+  border: 1px solid rgba(240, 114, 122, 0.3);
+  color: #ffb3b8;
+}
+
+.pk-meldung-premium {
+  background: rgba(var(--accent-purple-rgb), 0.12);
+  border: 1px solid rgba(var(--accent-purple-rgb), 0.35);
+  color: var(--text-muted);
+}
+
+.pk-meldung a {
+  color: var(--primary-light);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 620px) {
+  .pk-oben { gap: 12px; }
+  .pk-bild { width: 72px; height: 72px; }
+  /* Unter 620px untereinander: zwei Spalten mit je drei Woertern
+     pro Zeile sind unlesbar. */
+  .pk-gruende { grid-template-columns: 1fr; gap: 14px; }
+  .pk-knopf-voll, .pk-knopf-glocke { flex: 1 1 100%; }
+}
+
+
+/* ============================================
+   SCHMALE VARIANTE - DREI KARTEN NEBENEINANDER
+   ============================================
+   So steht es in deiner Vorlage: drei Karten in einer Reihe,
+   Bild oben, darunter Name, Preis, Punktzahl, dann die Gruende.
+
+   Die normale Karte legt Bild und Kopf NEBENEINANDER und die
+   Gruende in ZWEI Spalten. Das braucht rund 700 Pixel. Drei
+   davon nebeneinander waeren 2100 - mehr als jeder Bildschirm
+   hat. Darum hier alles untereinander.
+
+   Was sich NICHT aendert: Es stehen weiter Vorteile UND
+   Nachteile auf jeder Karte, beide gleich gross. Das ist
+   Grundsatz 2 und faellt nicht weg, nur weil es enger wird. */
+.pk-schmal {
+  display: flex;
+  flex-direction: column;
+}
+
+.pk-schmal .pk-oben {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+/* Bild ueber die ganze Breite, wie in der Vorlage. */
+.pk-schmal .pk-bild {
+  width: 100%;
+  height: 128px;
+  border-radius: 11px;
+}
+
+.pk-schmal .pk-name {
+  font-size: 0.97rem;
+  /* Lange Produktnamen duerfen umbrechen, aber nicht die Karte
+     sprengen - sonst stehen drei Karten nicht mehr gleich hoch. */
+  overflow-wrap: anywhere;
+}
+
+.pk-schmal .pk-preiszeile {
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+.pk-schmal .pk-preis { font-size: 1.22rem; }
+
+/* Eine Spalte statt zwei. */
+.pk-schmal .pk-gruende {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.pk-schmal .pk-gruende li { font-size: 0.82rem; }
+
+/* Die Knoepfe untereinander - nebeneinander waeren sie hier
+   beide zu schmal zum Treffen. */
+.pk-schmal .pk-knoepfe {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.pk-schmal .pk-knopf-glocke {
+  min-width: 0;
+  justify-content: center;
+}
+
+/* Damit drei Karten in einer Reihe gleich hoch enden, auch wenn
+   eine weniger Gruende hat: Die Knopfreihe wird nach unten
+   gedrueckt. */
+.pk-schmal .pk-knoepfe { margin-top: auto; }
+
+/* ============================================
+   WARUM HIER flex UND flex-wrap ZURUECKGESETZT WERDEN
+   ============================================
+   GEMESSEN am 07.10.2026 im Browser, nicht ueberlegt.
+
+   Unter 620 Pixeln steht weiter oben:
+
+       .pk-knopf-voll, .pk-knopf-glocke { flex: 1 1 100%; }
+
+   Das war fuer die normale Karte gedacht, wo die Knopfreihe
+   eine ZEILE ist. Dort heisst "100%": nimm die volle BREITE -
+   also untereinander. Genau richtig.
+
+   In der schmalen Karte ist die Reihe aber eine SPALTE. Und in
+   einer Spalte meint dieselbe Angabe die volle HOEHE. Jeder
+   Knopf wollte die ganze Hoehe fuer sich, beide zusammen
+   passten nicht - und weil flex-wrap: wrap gilt, ist der
+   zweite in eine NEUE SPALTE umgebrochen. Ergebnis: Die beiden
+   Knoepfe standen auf dem Handy nebeneinander, jeder halb so
+   breit und doppelt so hoch wie gewollt.
+
+   Gemessen hatte ich: 134x94 bei x=54 und 139x94 bei x=197 -
+   also tatsaechlich nebeneinander, obwohl flex-direction
+   "column" sagte.
+
+   Merksatz: flex-basis zeigt immer in die Richtung der
+   Hauptachse. Dreht man die Achse, dreht sich die Bedeutung
+   mit. */
+.pk-schmal .pk-knoepfe {
+  flex-wrap: nowrap;
+}
+
+.pk-schmal .pk-knopf-voll,
+.pk-schmal .pk-knopf-glocke {
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+}

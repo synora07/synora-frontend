@@ -1,0 +1,416 @@
+/* ============================================
+   SYNORA - Hintergrund
+   ============================================ */
+
+.hg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  /* Faengt keine Klicks ab - sonst waere die ganze Seite
+     unbedienbar, weil dieses Element darueber liegt. */
+  pointer-events: none;
+  background: var(--bg-dark);
+}
+
+.hg-bild,
+.hg-foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hg-foto {
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+}
+
+/* ============================================
+   DER SCHLEIER
+   ============================================
+   Das Wichtigste an dieser Datei.
+
+   In der Vorlage liegt weisse Schrift ueber einem Bild mit
+   hellen Stellen - Schnee, Wasserspiegelungen, Lichter. An
+   genau diesen Stellen ist weisser Text nicht mehr lesbar.
+
+   Diese Schicht legt sich darueber und nimmt dem Bild gerade so
+   viel Helligkeit, dass die Schrift sicher lesbar bleibt - oben
+   staerker, weil dort die Ueberschrift steht.
+
+   Ein schoener Hintergrund, auf dem man den Text nicht lesen
+   kann, ist kein schoener Hintergrund. */
+.hg-schleier {
+  position: absolute;
+  inset: 0;
+  background:
+    /* VON OBEN NACH UNTEN - nur leicht.
+       Frueher stand hier oben 0.52. Damit war die Landschaft
+       halb weggedunkelt und von dem kraeftigen Blau der
+       Vorlage blieb ein Graublau uebrig. Jetzt 0.26: gerade
+       genug, dass die weisse Schrift sicher steht. */
+    linear-gradient(
+      180deg,
+      rgba(4, 9, 22, 0.26) 0%,
+      rgba(4, 9, 22, 0.08) 38%,
+      rgba(4, 9, 22, 0.16) 68%,
+      rgba(4, 9, 22, 0.62) 100%
+    ),
+    /* VON LINKS NACH RECHTS - das ist die wichtige Schicht.
+       In deiner Vorlage ist es genauso aufgebaut: links steht
+       die Ueberschrift auf fast schwarzem Grund (gemessen
+       #010518), rechts leuchtet die Landschaft (#2a429f).
+       Das ist kein Zufall, sondern der Grund, warum man die
+       Schrift dort lesen kann. */
+    linear-gradient(
+      90deg,
+      rgba(4, 9, 22, 0.80) 0%,
+      rgba(4, 9, 22, 0.58) 26%,
+      rgba(4, 9, 22, 0.22) 48%,
+      rgba(4, 9, 22, 0) 72%
+    );
+}
+
+/* ============================================
+   ============================================
+   DIE BEWEGUNG
+   ============================================
+   ============================================
+   ALLES steht in diesem einen Block:
+
+       @media (prefers-reduced-motion: no-preference)
+
+   Das heisst woertlich "nur wenn der Besucher NICHT gesagt hat,
+   dass er weniger Bewegung will".
+
+   Der uebliche Weg waere andersherum: erst alles animieren, dann
+   in einem zweiten Block wieder abschalten. Das geht oft schief,
+   weil man eine Regel vergisst - und genau das ist mir auf
+   dieser Seite schon einmal passiert (die Kategorie-Kacheln
+   bewegten sich trotz der Einstellung weiter, weil eine
+   hover-Regel staerker war).
+
+   So herum kann das nicht passieren: Wer "Bewegung reduzieren"
+   eingestellt hat, bekommt diesen Block nie zu sehen. Dann steht
+   das Bild still - nicht langsamer, sondern still.
+   ============================================ */
+
+/* ============================================
+   WENN ES AUF DEINEM HANDY RUCKELT
+   ============================================
+   GEMESSEN am 08.10.2026, alles am selben Code, nacheinander,
+   auf einem Rechner OHNE Grafikkarte:
+
+       alles bewegt sich (so wie jetzt)        24 Bilder/s
+       ohne Baender                            32
+       ohne Baender + Nordlicht                35
+       ohne Baender + Nordlicht + Dunst        37
+       nur Berge + Sterne                      39
+       nur Sterne funkeln                      53
+       alles still                             61
+
+   Zwei Dinge liest man daraus ab:
+
+   1. Im STILLSTAND kostet der Hintergrund nichts (61 ist auch
+      der Wert ganz ohne Hintergrund). Die Zeichnung selbst ist
+      also guenstig - nur das Bewegen kostet.
+
+   2. Am teuersten sind die Baender und die Berge. Das sind die
+      grossen Flaechen; je mehr Pixel sich bewegen, desto mehr
+      muss neu gezeichnet werden.
+
+   WICHTIG: Diese Zahlen gelten fuer einen Rechner ohne
+   Grafikkarte. Auf deinem Notebook und auf jedem Handy der
+   letzten Jahre uebernimmt der Grafikchip das Verschieben, und
+   dann ist es deutlich mehr. Ich kann das hier nur nicht
+   nachmessen - darum sag ich dir die Zahlen, die ich habe, und
+   nicht die, die ich gerne haette.
+
+   SO STELLST DU ES EIN
+   Pruef es zuerst selbst: npm start, Seite oeffnen, scrollen.
+   Fuehlt es sich zaeh an, kopier eine dieser Zeilen hier
+   herein - von oben nach unten, bis es passt:
+
+       .hg-band  { animation: none !important; }   bringt am meisten
+       .hg-nord  { animation: none !important; }
+       .hg-dunst { animation: none !important; }
+       .hg-berg  { animation: none !important; }
+       .hg-welle { animation: none !important; }   bringt am wenigsten
+
+   Das Bild bleibt dabei vollstaendig - es bewegt sich nur
+   weniger. */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* --------------------------------------------
+     1. NORDLICHT
+     --------------------------------------------
+     Zwei Schleier, GEGENLAEUFIG. Liefen sie gleich herum,
+     saehe man nach einer Minute wieder genau dieselbe Form.
+     Gegenlaeufig ueberlagern sie sich dauernd neu, und das
+     Muster wiederholt sich erst nach Stunden. */
+  .hg-nord {
+    will-change: transform, opacity;
+  }
+
+  .hg-nord-1 {
+    animation: hgNordRechts 54s ease-in-out infinite alternate;
+  }
+
+  .hg-nord-2 {
+    animation: hgNordLinks 72s ease-in-out infinite alternate;
+  }
+
+  @keyframes hgNordRechts {
+    from { transform: translate(-70px, 8px);  opacity: 0.55; }
+    to   { transform: translate(70px, -12px); opacity: 1; }
+  }
+
+  @keyframes hgNordLinks {
+    from { transform: translate(90px, -6px);  opacity: 1; }
+    to   { transform: translate(-90px, 10px); opacity: 0.5; }
+  }
+
+  /* --------------------------------------------
+     2. STERNE
+     --------------------------------------------
+     Jeder Stern bekommt eine andere Dauer und einen anderen
+     Startpunkt. Haetten alle dieselbe, wuerde der ganze Himmel
+     im Gleichtakt blinken - das sieht nach kaputtem Bildschirm
+     aus, nicht nach Nacht.
+
+     Die negativen Verzoegerungen sind kein Fehler: sie starten
+     die Bewegung mitten im Ablauf, statt alle bei null. */
+  .hg-sterne circle {
+    animation: hgFunkeln 6s ease-in-out infinite alternate;
+  }
+
+  .hg-sterne circle:nth-child(1)  { animation-duration: 5.5s; animation-delay: -0.4s; }
+  .hg-sterne circle:nth-child(2)  { animation-duration: 7.2s; animation-delay: -2.9s; }
+  .hg-sterne circle:nth-child(3)  { animation-duration: 4.4s; animation-delay: -1.7s; }
+  .hg-sterne circle:nth-child(4)  { animation-duration: 8.6s; animation-delay: -5.2s; }
+  .hg-sterne circle:nth-child(5)  { animation-duration: 5.1s; animation-delay: -3.3s; }
+  .hg-sterne circle:nth-child(6)  { animation-duration: 6.8s; animation-delay: -0.9s; }
+  .hg-sterne circle:nth-child(7)  { animation-duration: 4.9s; animation-delay: -4.1s; }
+  .hg-sterne circle:nth-child(8)  { animation-duration: 7.7s; animation-delay: -2.2s; }
+  .hg-sterne circle:nth-child(9)  { animation-duration: 6.2s; animation-delay: -6.0s; }
+  .hg-sterne circle:nth-child(10) { animation-duration: 5.7s; animation-delay: -1.1s; }
+  .hg-sterne circle:nth-child(11) { animation-duration: 8.1s; animation-delay: -3.8s; }
+  .hg-sterne circle:nth-child(12) { animation-duration: 4.6s; animation-delay: -5.6s; }
+
+  @keyframes hgFunkeln {
+    from { opacity: 0.22; }
+    to   { opacity: 0.92; }
+  }
+
+  /* --------------------------------------------
+     3. DUNST
+     --------------------------------------------
+     Nebel ueber den Kaemmen. Er darf am weitesten wandern:
+     Nebel bewegt sich sichtbar, Fels nicht. Genau dieser
+     Unterschied macht, dass die Berge stehen und das Bild
+     trotzdem lebt. */
+  .hg-dunst-1 {
+    animation: hgTreiben 80s linear infinite alternate;
+  }
+
+  .hg-dunst-2 {
+    animation: hgTreibenZurueck 110s linear infinite alternate;
+  }
+
+  @keyframes hgTreiben {
+    from { transform: translate(-110px, 4px); opacity: 0.6; }
+    to   { transform: translate(110px, -4px); opacity: 1; }
+  }
+
+  @keyframes hgTreibenZurueck {
+    from { transform: translate(120px, -3px);  opacity: 1; }
+    to   { transform: translate(-120px, 5px);  opacity: 0.55; }
+  }
+
+  /* --------------------------------------------
+     4. BERGE - der Tiefeneindruck
+     --------------------------------------------
+     VIER EBENEN, VIER GESCHWINDIGKEITEN. Hinten am langsamsten,
+     vorne am schnellsten. Das ist alles - mehr steckt hinter
+     dem Tiefeneindruck nicht.
+
+     So sieht man es aus dem Zugfenster: die Berge am Horizont
+     stehen scheinbar still, die Baeume am Gleis rasen vorbei.
+     Das Auge liest daraus Entfernung, ohne dass man darueber
+     nachdenkt.
+
+     Die Wege sind winzig - zehn bis vierundvierzig Einheiten auf
+     ein 1600 Einheiten breites Bild, verteilt auf anderthalb bis
+     zwei Minuten. Niemand sieht die Berge wandern. Man sieht nur,
+     dass das Bild atmet. */
+  .hg-berg {
+    will-change: transform;
+  }
+
+  .hg-berg-fern  { animation: hgZiehenFern  110s ease-in-out infinite alternate; }
+  .hg-berg-mitte { animation: hgZiehenMitte  92s ease-in-out infinite alternate; }
+  .hg-berg-nah   { animation: hgZiehenNah    76s ease-in-out infinite alternate; }
+  .hg-baeume     { animation: hgZiehenBaeume 70s ease-in-out infinite alternate; }
+
+  @keyframes hgZiehenFern {
+    from { transform: translate(-5px, 0); }
+    to   { transform: translate(5px, 0); }
+  }
+
+  @keyframes hgZiehenMitte {
+    from { transform: translate(-9px, 0); }
+    to   { transform: translate(9px, 0); }
+  }
+
+  @keyframes hgZiehenNah {
+    from { transform: translate(-15px, 0); }
+    to   { transform: translate(15px, 0); }
+  }
+
+  @keyframes hgZiehenBaeume {
+    from { transform: translate(-22px, 0); }
+    to   { transform: translate(22px, 0); }
+  }
+
+  /* --------------------------------------------
+     5. SEE
+     --------------------------------------------
+     Drei Dinge auf dem Wasser, alle unabhaengig voneinander:
+
+     a) Lichtstreifen wandern quer ueber den See
+     b) die Bergspiegelung wird heller und dunkler
+     c) die Lichter vom Ufer zittern im Wasser
+
+     Die Spiegelung wird NUR in der Helligkeit bewegt, nicht
+     verschoben. Grund: an ihr haengt im SVG schon ein eigener
+     transform (umklappen und stauchen). Ein transform aus dem
+     CSS wuerde den ersetzen, nicht ergaenzen - die Spiegelung
+     waere dann aufrecht und wuerde die halbe Zeichnung
+     verdecken. */
+  .hg-welle {
+    animation: hgWandern 42s linear infinite;
+  }
+
+  .hg-welle-1 { animation-duration: 38s; animation-delay: -6s; }
+  .hg-welle-2 { animation-duration: 64s; animation-delay: -28s; }
+  .hg-welle-3 { animation-duration: 52s; animation-delay: -15s; }
+
+  @keyframes hgWandern {
+    0%   { transform: translateX(0);      opacity: 0; }
+    12%  {                                opacity: 0.55; }
+    88%  {                                opacity: 0.5; }
+    100% { transform: translateX(2000px); opacity: 0; }
+  }
+
+  .hg-spiegel {
+    animation: hgWogen 24s ease-in-out infinite alternate;
+  }
+
+  @keyframes hgWogen {
+    from { opacity: 0.18; }
+    to   { opacity: 0.32; }
+  }
+
+  .hg-lichtspiegel {
+    animation: hgZittern 7s ease-in-out infinite alternate;
+  }
+
+  @keyframes hgZittern {
+    from { opacity: 0.16; }
+    to   { opacity: 0.42; }
+  }
+
+  .hg-lichter circle:nth-child(2n) {
+    animation: hgFlackern 9s ease-in-out infinite alternate;
+  }
+
+  .hg-lichter circle:nth-child(3n) {
+    animation: hgFlackern 13s ease-in-out infinite alternate -4s;
+  }
+
+  @keyframes hgFlackern {
+    from { opacity: 0.45; }
+    to   { opacity: 0.95; }
+  }
+
+  /* --------------------------------------------
+     6. DIE LEUCHTENDEN BAENDER
+     --------------------------------------------
+     Aus deiner Vorlage. Sehr langsam und sehr klein - man soll
+     es nicht bemerken, nur spueren, dass das Bild nicht tot ist.
+
+     Diese Klassen sitzen am <g> MIT dem Weichzeichner, nicht am
+     Pfad darin. Siehe die Begruendung in Hintergrund.jsx: so
+     rechnet der Browser den Weichzeichner einmal und schiebt
+     danach nur noch das fertige Bild herum. */
+  .hg-band {
+    animation: hgFliessen 26s ease-in-out infinite alternate;
+    will-change: transform, opacity;
+  }
+
+  .hg-band-2 { animation-duration: 34s; animation-delay: -8s; }
+  .hg-band-3 { animation-duration: 42s; animation-delay: -16s; }
+
+  @keyframes hgFliessen {
+    from { transform: translate(0, 0);      opacity: 0.85; }
+    to   { transform: translate(-26px, -14px); opacity: 1; }
+  }
+}
+
+/* ============================================
+   KLEINE BILDSCHIRME
+   ============================================ */
+@media (max-width: 760px) {
+  .hg-bild {
+    /* NACH UNTEN, nicht nach oben.
+       Hochkant ist das Fenster schmal und hoch. Die Berge landen
+       dann genau dort, wo die Ueberschrift und der Fliesstext
+       stehen - graue Zacken quer durch den Satz, und man liest
+       schlechter.
+       Um ein Fuenftel nach unten geschoben liegt der Horizont
+       unter dem Text, bei den Knoepfen. Oben bleibt dunkler
+       Himmel, und der hat dieselbe Farbe wie der Seitenrand -
+       darum sieht man die Kante nicht. */
+    top: 20%;
+    height: 100%;
+  }
+
+  /* Oben liegt jetzt ohnehin nur dunkler Himmel hinter dem Text,
+     darum muss der Schleier dort nicht mehr so stark sein. Die
+     Landschaft weiter unten darf dafuer deutlicher zu sehen sein.
+     Seitlich wird hochkant nicht abgedunkelt - dafuer ist kein
+     Platz, der Text geht ueber die ganze Breite. */
+  .hg-schleier {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(5, 11, 26, 0.48) 0%,
+        rgba(5, 11, 26, 0.30) 38%,
+        rgba(5, 11, 26, 0.42) 70%,
+        rgba(5, 11, 26, 0.86) 100%
+      );
+  }
+}
+
+/* ============================================
+   SCHWACHE GERAETE
+   ============================================
+   Ein Handy mit wenig Rechenleistung soll nicht heiss werden,
+   weil im Hintergrund ein Nordlicht zieht. Auf schmalen
+   Bildschirmen laufen darum nur die Ebenen weiter, die wenig
+   kosten (Berge, Sterne, Baender) - die beiden grossflaechig
+   weichgezeichneten Schleier stehen still.
+
+   Weichzeichnen ist mit Abstand das Teuerste an dieser
+   Zeichnung, und auf einem 390 Pixel breiten Bildschirm sieht
+   man von einem 300 Einheiten breiten Nebelstreifen ohnehin
+   fast nichts. */
+@media (max-width: 760px) {
+  .hg-nord,
+  .hg-dunst {
+    animation: none !important;
+  }
+}

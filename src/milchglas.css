@@ -1,0 +1,152 @@
+/* ============================================
+   SYNORA - Milchglas gegen Bewegung
+   ============================================
+   GEMESSEN AM 06.10.2026, nicht geschaetzt.
+
+   Deine Vorlage hat zwei Dinge, die sich gegenseitig im Weg
+   stehen: Kacheln aus Milchglas (backdrop-filter) und einen
+   Hintergrund, der sich bewegt.
+
+   Einzeln kostet keines von beiden etwas. Zusammen schon:
+
+       Bewegung aus, Milchglas an     59 Bilder/Sekunde
+       Bewegung an,  Milchglas aus    44 Bilder/Sekunde
+       BEIDES AN                      27 Bilder/Sekunde
+
+   Der Grund: Milchglas heisst "nimm alles, was hinter dieser
+   Kachel liegt, und verwische es". Steht der Hintergrund still,
+   rechnet der Browser das EINMAL. Bewegt er sich, rechnet er es
+   bei JEDEM Bild neu - sechzigmal pro Sekunde, fuer jede Kachel.
+
+   DER RADIUS IST DABEI EGAL. Auch gemessen:
+
+       blur(24px)   26 Bilder/Sekunde
+       blur(3px)    26 Bilder/Sekunde
+       kein Blur    44 Bilder/Sekunde
+
+   Es hilft also nichts, den Weichzeichner schwaecher zu machen.
+   Entweder er ist da, oder er ist weg.
+
+   ============================================
+   WAS DIESE DATEI MACHT
+   ============================================
+   Sie nimmt das Milchglas weg und macht die Kacheln dafuer
+   dichter - von 80 auf 94 Prozent.
+
+   Warum das reicht: Auf dunklem Grund hat das Milchglas nur eine
+   einzige sichtbare Aufgabe, naemlich zu verhindern, dass man
+   Bergkanten durch die Kachel schimmern sieht. Eine dichtere
+   Kachel macht genau dasselbe - und kostet nichts.
+
+   Ich habe beide Fassungen nebeneinander fotografiert. Der
+   einzige Unterschied war, dass ohne Milchglas die Bergspitzen
+   schwach durch die Produktkarte schienen. Mit den dichteren
+   Werten hier ist auch das weg.
+
+   ============================================
+   WENN DU DAS MILCHGLAS DOCH WILLST
+   ============================================
+   1. In src/App.jsx die Zeile  import './milchglas.css';  loeschen
+   2. Diese Datei loeschen
+
+   Dann hast du die Vorlage exakt - aber der Hintergrund laeuft
+   bei rund 27 Bildern pro Sekunde statt 44. Auf deinem Rechner
+   faellt das kaum auf, auf einem drei Jahre alten Android schon.
+
+   Willst du BEIDES behalten, ist der dritte Weg: die Bewegung
+   abschalten statt des Milchglases. Dazu in
+   src/bausteine/Hintergrund.css den Block
+   "@media (prefers-reduced-motion: no-preference)" loeschen.
+   Dann steht das Bild still und das Milchglas kostet nichts.
+
+   ============================================
+   WARUM DIESE DATEI ZULETZT GELADEN WIRD
+   ============================================
+   Sie wird in App.jsx als LETZTE importiert. Das ist Absicht:
+   Bei gleicher Spezifitaet gewinnt in CSS die Regel, die spaeter
+   kommt. Stuende der Import weiter oben, wuerden die Regeln aus
+   Startseite.css und Chat.css gewinnen und diese Datei haette
+   keine Wirkung - ohne Fehlermeldung, man wuerde es nur an der
+   Bildrate merken.
+   ============================================ */
+
+/* ============================================
+   1. DIE DICHTERE KACHELFARBE
+   ============================================
+   Fast alle Kacheln holen ihre Farbe aus derselben Variablen.
+   Darum reicht hier EINE Zeile fuer die ganze Seite - statt
+   sechzehn einzelner Regeln, von denen man spaeter eine
+   vergisst, wenn eine neue Seite dazukommt.
+
+   WARUM HIER :root:root STEHT UND NICHT NUR :root
+   Weil ich mich geirrt habe und es gemessen habe.
+
+   Ich hatte angenommen, dass die zuletzt importierte CSS-Datei
+   auch zuletzt im fertigen Build steht. Das stimmt nicht: Der
+   Bundler schreibt App.css NACH dieser Datei hinaus, obwohl sie
+   in App.jsx als letzte importiert wird. Nachgesehen in der
+   fertigen main.css - dort stand der Wert aus App.css 750
+   Zeichen weiter hinten und hat gewonnen.
+
+   Die Kacheln blieben darum bei 80 Prozent, und auf dem
+   Bildschirmfoto schienen die Berge durch die Produktkarte.
+
+   :root:root meint dasselbe Element wie :root, zaehlt aber als
+   zwei Treffer statt einem. Damit gewinnt die Regel unabhaengig
+   davon, in welcher Reihenfolge der Bundler die Dateien
+   hinausschreibt - und ich muss mich nicht noch einmal auf eine
+   Annahme verlassen, die ich nicht kontrolliere. */
+:root:root {
+  --bg-card: rgba(10, 18, 38, 0.94);
+}
+
+/* ============================================
+   2. DAS MILCHGLAS ABSCHALTEN
+   ============================================
+   Vollstaendige Liste - erstellt, indem ich jede CSS-Datei nach
+   "backdrop-filter" durchsucht habe, nicht aus dem Gedaechtnis.
+
+   Kommt spaeter eine neue Kachel mit Milchglas dazu, gehoert
+   sie hier dazu. Sonst bremst sie den Hintergrund wieder aus,
+   und man sucht lange nach dem Grund.
+
+   Das :root davor hat denselben Grund wie oben: Drei dieser
+   Klassen (.glass-*) stehen in App.css, und App.css wird nach
+   dieser Datei geladen. Ohne das :root wuerden genau die drei
+   ihr Milchglas behalten. */
+:root .st-suche,
+:root .st-karte,
+:root .st-versprechen,
+:root .ch-leiste,
+:root .ch-mitte,
+:root .kg-karte,
+:root .fs-karte,
+:root .pk-karte,
+:root .pr-spalte,
+:root .pr-tabelle-huelle,
+:root .sy-kopf-gescrollt,
+:root .sy-kopf-klapp,
+:root .sy-fuss,
+:root .glass-card,
+:root .glass-message,
+:root .glass-product {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ============================================
+   3. DIE ZWEI AUSNAHMEN
+   ============================================
+   Kopfzeile und Fusszeile benutzen die Variable von oben nicht,
+   sondern haben eigene Farben. Sie brauchen darum eigene Werte.
+
+   Die Kopfzeile ist dabei der teuerste Fall von allen gewesen:
+   Sie bekommt ihr Milchglas erst beim Scrollen - also genau
+   dann, wenn sich hinter ihr am meisten bewegt. */
+:root .sy-kopf-gescrollt {
+  background: rgba(5, 11, 26, 0.95);
+}
+
+:root .sy-fuss {
+  background: rgba(5, 11, 26, 0.88);
+}

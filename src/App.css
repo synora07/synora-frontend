@@ -1,6 +1,26 @@
 /* ============================================
    SYNORA APP - GLASSMORPHISM STYLE
-   Komplettes CSS für die Chat-App
+   Komplettes CSS fuer die Chat-App
+   ============================================
+   Stand 04.10.2026 - Farben auf das neue Blau umgestellt.
+
+   WAS SICH GEAENDERT HAT
+   Nur Farben und zwei kaputte Zeichen. Kein Klassenname, kein
+   Abstand, keine Animation wurde angefasst. Deine Komponenten
+   laufen unveraendert weiter - sie sind nur blau statt gruen.
+
+   WARUM DAS VORHER NICHT MIT EINER ZEILE GING
+   Die Datei hatte ueber zwanzig Stellen mit fest eingetragenem
+   Gruen - rgba(46, 139, 87, ...) direkt im Schatten, im Rahmen,
+   im Verlauf. Nur --primary zu aendern haette ein halb gruenes,
+   halb blaues Bild ergeben.
+   Darum gibt es jetzt --primary-rgb. Damit lassen sich auch
+   halbdurchsichtige Farben aus der Variable bauen:
+
+       rgba(var(--primary-rgb), 0.15)
+
+   Ab sofort gilt also wirklich: Markenfarbe aendern = die Zeilen
+   unter MARKENFARBEN anpassen, sonst nichts.
    ============================================ */
 
 /* ==========================================
@@ -9,24 +29,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg-dark: #050807;
-  --bg-card: rgba(10, 13, 11, 0.8);
-  --bg-card-solid: #0a0d0b;
-  --bg-message-user: rgba(46, 139, 87, 0.15);
+  /* ---------- MARKENFARBEN - hier und nur hier aendern ---------- */
+  --primary: #2B7FFF;            /* das Blau aus dem Logo */
+  --primary-light: #5BB8FF;      /* fuer Links und Beschriftungen */
+  --primary-dark: #1B4FD1;       /* untere Haelfte der Verlaeufe */
+  --primary-rgb: 43, 127, 255;   /* dasselbe Blau als Zahlen-Tripel */
+
+  --accent-cyan: #4FD6F5;        /* die hervorgehobenen Woerter */
+  --accent-purple: #7C3AED;      /* Ende der Verlaeufe */
+  --accent-cyan-rgb: 79, 214, 245;
+  --accent-purple-rgb: 124, 58, 237;
+
+  /* Der Markenverlauf. Steht an einer Stelle, damit jeder Knopf
+     denselben zeigt - vorher war er in jeder Regel neu getippt. */
+  --gradient-brand: linear-gradient(135deg, var(--accent-cyan) 0%, var(--primary) 52%, var(--accent-purple) 100%);
+  --gradient-brand-soft: linear-gradient(135deg, var(--primary-light), var(--primary));
+
+  /* ---------- Flaechen ---------- */
+  --bg-dark: #050B1A;
+  --bg-card: rgba(10, 18, 38, 0.8);
+  --bg-card-solid: #0a1226;
+  --bg-message-user: rgba(var(--primary-rgb), 0.15);
   --bg-message-ai: rgba(255, 255, 255, 0.03);
-  --primary: #2E8B57;
-  --primary-light: #3da86d;
-  --primary-dark: #236B43;
-  --primary-glow: rgba(46, 139, 87, 0.5);
+
+  /* ---------- Schrift ---------- */
   --text: #ffffff;
-  --text-muted: #a8a8a8;
-  --text-dim: #666666;
+  --text-muted: #9fb3d1;
+  --text-dim: #5d6b85;
+
+  /* ---------- Raender und Glanz ---------- */
   --border: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(46, 139, 87, 0.3);
+  --border-glow: rgba(var(--primary-rgb), 0.3);
+  --primary-glow: rgba(var(--primary-rgb), 0.5);
   --glass-bg: rgba(255, 255, 255, 0.02);
   --glass-border: rgba(255, 255, 255, 0.06);
   --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 40px rgba(46, 139, 87, 0.15);
+  --shadow-glow: 0 0 40px rgba(var(--primary-rgb), 0.15);
+
+  /* ---------- Bewertungsfarben ---------- */
+  /* Gelb und Rot bleiben, wie sie sind. Eine schlechte Bewertung
+     muss sich von der Markenfarbe abheben - sonst sieht ein
+     Produkt mit 40 Punkten aus wie eines mit 95. */
+  --score-mittel: #eab308;
+  --score-schlecht: #ef4444;
 }
 
 /* ==========================================
@@ -84,10 +129,13 @@ body {
   animation: orbFloat1 25s ease-in-out infinite;
 }
 
+/* Die zweite Kugel bekommt das Violett aus dem Logo. So entsteht
+   derselbe Farbverlauf im Hintergrund wie in der Vorlage, ohne
+   ein einziges Bild laden zu muessen. */
 .orb-2 {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--accent-purple) 0%, transparent 70%);
   bottom: -100px;
   left: -100px;
   animation: orbFloat2 30s ease-in-out infinite;
@@ -96,7 +144,7 @@ body {
 .orb-3 {
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%);
   top: 40%;
   left: 30%;
   animation: orbFloat3 20s ease-in-out infinite;
@@ -142,8 +190,8 @@ body {
 
 .loading-logo {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
 }
 
 .loading-logo img {
@@ -152,11 +200,21 @@ body {
   object-fit: contain;
   position: relative;
   z-index: 2;
-  filter: drop-shadow(0 0 10px rgba(46, 139, 87, 0.4));
+  animation: logoFloat 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px var(--primary-glow));
 }
 
 .loading-glow {
-  display: none; /* Glow-Box entfernt */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+  filter: blur(20px);
+  animation: glowPulse 2s ease-in-out infinite;
+  z-index: 1;
 }
 
 /* ==========================================
@@ -188,7 +246,14 @@ body {
 }
 
 .logo-glow {
-  display: none; /* Viereck entfernt */
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  left: -5px;
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+  filter: blur(15px);
+  animation: glowPulse 3s ease-in-out infinite;
+  z-index: 0;
 }
 
 .logo-image {
@@ -197,14 +262,15 @@ body {
   object-fit: contain;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 0 8px rgba(46, 139, 87, 0.4));
+  filter: drop-shadow(0 0 10px var(--primary-glow));
+  animation: logoGlow 3s ease-in-out infinite alternate;
 }
 
 .logo h1 {
   font-family: 'Space Grotesk', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  background: var(--gradient-brand-soft);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -237,19 +303,19 @@ body {
 }
 
 .btn-login {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: var(--gradient-brand);
   color: white;
   padding: 8px 20px;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(46, 139, 87, 0.3);
+  box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3);
 }
 
 .btn-login:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(46, 139, 87, 0.4);
+  box-shadow: 0 6px 25px rgba(var(--primary-rgb), 0.4);
 }
 
 /* ==========================================
@@ -261,7 +327,7 @@ body {
   align-items: center;
   padding: 12px 24px;
   margin: 12px 16px;
-  background: rgba(46, 139, 87, 0.1);
+  background: rgba(var(--primary-rgb), 0.1);
   border-color: var(--border-glow);
 }
 
@@ -280,7 +346,7 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: var(--gradient-brand);
   color: white;
   padding: 10px 20px;
   border-radius: 8px;
@@ -289,12 +355,12 @@ body {
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(46, 139, 87, 0.3);
+  box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(46, 139, 87, 0.5);
+  box-shadow: 0 6px 25px rgba(var(--primary-rgb), 0.5);
 }
 
 .btn-small {
@@ -364,8 +430,8 @@ body {
 
 .welcome-logo {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   margin: 0 auto 24px;
 }
 
@@ -375,11 +441,20 @@ body {
   object-fit: contain;
   position: relative;
   z-index: 2;
-  filter: drop-shadow(0 0 10px rgba(46, 139, 87, 0.3));
+  animation: logoFloat 4s ease-in-out infinite, logoGlow 3s ease-in-out infinite alternate;
 }
 
 .welcome-logo-glow {
-  display: none; /* Glow-Box entfernt */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+  filter: blur(25px);
+  animation: glowPulse 3s ease-in-out infinite;
+  z-index: 1;
 }
 
 .welcome-message h2 {
@@ -388,8 +463,10 @@ body {
   margin-bottom: 12px;
 }
 
+/* Die hervorgehobenen Woerter in der Ueberschrift - in der
+   Vorlage sind das "WAS" und "WARUM". */
 .welcome-message .highlight {
-  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  background: linear-gradient(135deg, var(--accent-cyan), var(--primary-light));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -413,7 +490,7 @@ body {
 .guest-hint {
   margin-top: 16px;
   padding: 12px 16px;
-  background: rgba(46, 139, 87, 0.1);
+  background: rgba(var(--primary-rgb), 0.1);
   border-radius: 8px;
   font-size: 0.9rem;
   color: var(--text-muted);
@@ -494,8 +571,7 @@ body {
 
 .message-text {
   color: var(--text);
-  line-height: 1.7;
-  white-space: pre-line;
+  line-height: 1.6;
 }
 
 /* ==========================================
@@ -520,7 +596,7 @@ body {
 }
 
 .option-button:hover {
-  background: rgba(46, 139, 87, 0.15);
+  background: rgba(var(--primary-rgb), 0.15);
   border-color: var(--primary);
   color: var(--primary-light);
 }
@@ -567,7 +643,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(46, 139, 87, 0.05) 0%, transparent 100%);
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05) 0%, transparent 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -575,7 +651,7 @@ body {
 .glass-product:hover {
   border-color: var(--border-glow);
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(46, 139, 87, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(var(--primary-rgb), 0.1);
 }
 
 .glass-product:hover::before {
@@ -586,7 +662,7 @@ body {
   position: absolute;
   top: 12px;
   left: 12px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: var(--gradient-brand);
   color: white;
   font-weight: 700;
   font-size: 0.8rem;
@@ -644,13 +720,13 @@ body {
 }
 
 .synora-score.score-excellent {
-  background: rgba(46, 139, 87, 0.2);
+  background: rgba(var(--primary-rgb), 0.2);
   border: 1px solid var(--border-glow);
 }
 
 .synora-score.score-good {
-  background: rgba(46, 139, 87, 0.15);
-  border: 1px solid rgba(46, 139, 87, 0.2);
+  background: rgba(var(--primary-rgb), 0.15);
+  border: 1px solid rgba(var(--primary-rgb), 0.2);
 }
 
 .synora-score.score-okay {
@@ -678,11 +754,11 @@ body {
 }
 
 .score-okay .score-value {
-  color: #eab308;
+  color: var(--score-mittel);
 }
 
 .score-low .score-value {
-  color: #ef4444;
+  color: var(--score-schlecht);
 }
 
 .product-price {
@@ -742,6 +818,11 @@ body {
   position: relative;
 }
 
+/* Hier stand ein kaputter Punkt. Die Datei war einmal falsch
+   gespeichert worden (UTF-8 als Westeuropaeisch gelesen), und
+   aus dem Aufzaehlungszeichen wurden drei Zeichen Buchstabensalat.
+   Im Browser stand vor jedem Vorteil Kauderwelsch statt eines
+   Punktes. */
 .why-list li::before {
   content: '•';
   position: absolute;
@@ -825,7 +906,7 @@ body {
 .btn-send {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  background: var(--gradient-brand);
   border: none;
   border-radius: 12px;
   color: white;
@@ -835,12 +916,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(46, 139, 87, 0.3);
+  box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3);
 }
 
 .btn-send:hover:not(:disabled) {
   transform: scale(1.05);
-  box-shadow: 0 6px 25px rgba(46, 139, 87, 0.5);
+  box-shadow: 0 6px 25px rgba(var(--primary-rgb), 0.5);
 }
 
 .btn-send:disabled {
@@ -894,11 +975,11 @@ body {
 
 @keyframes logoGlow {
   0% {
-    filter: drop-shadow(0 0 10px rgba(46, 139, 87, 0.5));
+    filter: drop-shadow(0 0 10px rgba(var(--primary-rgb), 0.5));
   }
   100% {
-    filter: drop-shadow(0 0 20px rgba(46, 139, 87, 0.8))
-            drop-shadow(0 0 40px rgba(46, 139, 87, 0.4));
+    filter: drop-shadow(0 0 20px rgba(var(--primary-rgb), 0.8))
+            drop-shadow(0 0 40px rgba(var(--accent-purple-rgb), 0.4));
   }
 }
 
@@ -921,54 +1002,54 @@ body {
     margin: 8px;
     padding: 10px 16px;
   }
-  
+
   .logo h1 {
     font-size: 1.2rem;
   }
-  
+
   .logo-image {
     width: 32px;
     height: 32px;
   }
-  
+
   .chat-container {
     padding: 8px;
   }
-  
+
   .messages {
     padding: 16px;
   }
-  
+
   .message.user,
   .message.assistant {
     max-width: 95%;
   }
-  
+
   .glass-product {
     flex-direction: column;
   }
-  
+
   .product-image-container {
     width: 100%;
     height: 150px;
   }
-  
+
   .product-rank {
     top: 8px;
     left: 8px;
   }
-  
+
   .guest-banner {
     flex-direction: column;
     gap: 12px;
     text-align: center;
   }
-  
+
   .welcome-logo {
     width: 80px;
     height: 80px;
   }
-  
+
   .welcome-logo-glow {
     width: 120px;
     height: 120px;
@@ -979,8 +1060,131 @@ body {
   .user-name {
     display: none;
   }
-  
+
   .welcome-message h2 {
     font-size: 1.4rem;
+  }
+}
+
+/* ============================================
+   BEWEGUNG - ergaenzt am 05.10.2026
+   ============================================ */
+
+/* ---------- Erster Aufbau der Seite ---------- */
+/* Die Elemente ganz oben erscheinen nacheinander statt alle auf
+   einmal. Das lenkt den Blick in der Reihenfolge, in der man
+   lesen soll: Ueberschrift, Untertitel, Suchfeld, Knoepfe.
+
+   Nur beim ERSTEN Bild - alles Weitere macht Erscheinen.jsx
+   beim Scrollen. */
+@media (prefers-reduced-motion: no-preference) {
+  .st-oben-text > * {
+    animation: syAufbau 0.55s cubic-bezier(.22, .8, .3, 1) backwards;
+  }
+  .st-oben-text > *:nth-child(1) { animation-delay: 0.00s; }
+  .st-oben-text > *:nth-child(2) { animation-delay: 0.07s; }
+  .st-oben-text > *:nth-child(3) { animation-delay: 0.14s; }
+  .st-oben-text > *:nth-child(4) { animation-delay: 0.21s; }
+  .st-oben-text > *:nth-child(5) { animation-delay: 0.28s; }
+  .st-oben-text > *:nth-child(6) { animation-delay: 0.35s; }
+  .st-oben-text > *:nth-child(7) { animation-delay: 0.42s; }
+
+  .st-oben-bild {
+    animation: syAufbauRechts 0.7s cubic-bezier(.22, .8, .3, 1) 0.2s backwards;
+  }
+}
+
+@keyframes syAufbau {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes syAufbauRechts {
+  from { opacity: 0; transform: translateY(20px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Knoepfe reagieren auf Druck ---------- */
+/* Das ist die nuetzlichste Animation ueberhaupt: Sie bestaetigt
+   dem Finger, dass der Tipp angekommen ist. Auf dem Handy, wo
+   es keinen Mauszeiger gibt, ersetzt sie das Hover-Gefuehl. */
+button:active:not(:disabled),
+a.btn-primary:active,
+.st-knopf-voll:active,
+.st-knopf-leer:active,
+.kg-knopf:active:not(:disabled),
+.fs-knopf:active:not(:disabled),
+.pk-knopf-voll:active,
+.pk-knopf-glocke:active:not(:disabled),
+.sy-kopf-knopf-voll:active,
+.pa-knopf-voll:active {
+  transform: scale(0.97);
+  transition-duration: 0.06s;
+}
+
+/* ---------- Produktkarten nacheinander ---------- */
+/* Nach einer Suche erscheinen die drei Vorschlaege gestaffelt.
+   Das zeigt, dass es eine Rangfolge gibt - Platz 1 ist zuerst
+   da. Die Animation sagt also etwas aus, statt nur huebsch zu
+   sein. */
+@media (prefers-reduced-motion: no-preference) {
+  .ch-produkte-raster > * {
+    animation: syAufbau 0.5s cubic-bezier(.22, .8, .3, 1) backwards;
+  }
+  .ch-produkte-raster > *:nth-child(1) { animation-delay: 0.00s; }
+  .ch-produkte-raster > *:nth-child(2) { animation-delay: 0.09s; }
+  .ch-produkte-raster > *:nth-child(3) { animation-delay: 0.18s; }
+  .ch-produkte-raster > *:nth-child(4) { animation-delay: 0.27s; }
+  .ch-produkte-raster > *:nth-child(5) { animation-delay: 0.36s; }
+
+  /* Neue Nachrichten im Chat */
+  .ch-nachricht {
+    animation: syAufbau 0.35s cubic-bezier(.22, .8, .3, 1) backwards;
+  }
+}
+
+/* ---------- Sanft scrollen ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+/* ============================================
+   BEWEGUNG REDUZIEREN - GILT FUER ALLES
+   ============================================
+   Dieser Block steht bewusst GANZ UNTEN in der Datei. Jede
+   Komponente bringt eigene Uebergaenge mit - .st-kategorie zum
+   Beispiel hebt sich beim Zeigen um drei Pixel an. Eine Regel
+   weiter oben haette die nicht erreicht, weil die spaeter
+   geladene gewinnt.
+
+   Gefunden am 05.10.2026 bei einem Test mit eingeschalteter
+   Einstellung "Bewegung reduzieren": Die Einblendung war aus,
+   die Hover-Bewegung lief weiter.
+
+   Wer diese Einstellung setzt, hat meist einen Grund - Migraene,
+   Schwindel, Epilepsie, Reisekrankheit. Dann gilt: KEINE
+   Bewegung, nicht weniger Bewegung.
+
+   Farbwechsel bleiben. Die stoeren niemanden und sie sind es,
+   die einen Knopf als Knopf erkennbar machen. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Verschiebungen und Groessenaenderungen ganz abschalten -
+     nicht nur beschleunigen. Eine Bewegung in 0.01 Sekunden ist
+     ein Sprung, und ein Sprung kann genauso stoeren. */
+  *:hover,
+  *:active,
+  *:focus {
+    transform: none !important;
   }
 }

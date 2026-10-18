@@ -1,43 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+  <title>SYNORA &ndash; Unabh&auml;ngige Produktempfehlungen aus Schweizer Shops</title>
+  <meta name="description" content="SYNORA vergleicht Produkte aus Schweizer Shops, begr&uuml;ndet jede Empfehlung und nennt bei jedem Produkt auch einen Nachteil." />
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+  <!-- Faerbt auf dem Handy die Browserleiste oben. Ohne das
+       steht ueber der dunklen Seite ein weisser Balken. -->
+  <meta name="theme-color" content="#050B1A" />
+  <meta name="color-scheme" content="dark" />
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+  <!-- %PUBLIC_URL% ersetzt Create React App beim Bauen durch den
+       richtigen Pfad. Ohne diesen Platzhalter funktionieren die
+       Symbole nur lokal, aber nicht auf Vercel. -->
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/apple-touch-icon.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+  <!-- Schriften frueh anfordern, damit der Text nicht erst in
+       Arial erscheint und dann umspringt. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Fuer geteilte Links in WhatsApp, Slack und sozialen Netzen -->
+  <meta property="og:title" content="SYNORA &ndash; Unabh&auml;ngige Produktempfehlungen" />
+  <meta property="og:description" content="Vergleicht Produkte aus Schweizer Shops, begr&uuml;ndet jede Empfehlung und nennt bei jedem Produkt auch einen Nachteil." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://synora.li" />
+  <meta property="og:image" content="https://synora.li/icon-512.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+</head>
+<body>
+  <noscript>F&uuml;r SYNORA muss JavaScript eingeschaltet sein.</noscript>
+  <div id="root"></div>
+</body>
 </html>

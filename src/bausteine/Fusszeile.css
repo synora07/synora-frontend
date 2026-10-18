@@ -1,0 +1,128 @@
+/* ============================================
+   SYNORA - Fusszeile
+   ============================================ */
+
+.sy-fuss {
+  position: relative;
+  z-index: 1;
+  margin-top: 90px;
+  border-top: 1px solid var(--border);
+  background: rgba(5, 11, 26, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.sy-fuss-innen {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 52px 24px 30px;
+}
+
+.sy-fuss-oben {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.2fr) 2fr;
+  gap: 48px;
+  margin-bottom: 36px;
+}
+
+.sy-fuss-marke p {
+  margin-top: 16px;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.7;
+  max-width: 330px;
+}
+
+.sy-fuss-spalten {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.sy-fuss-spalten h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.sy-fuss-spalten ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sy-fuss-spalten li {
+  margin-bottom: 11px;
+}
+
+.sy-fuss-spalten a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.92rem;
+  transition: color 0.2s ease;
+  /* Lange Mailadressen sollen die Spalte nicht sprengen. */
+  overflow-wrap: anywhere;
+}
+
+.sy-fuss-spalten a:hover {
+  color: var(--primary-light);
+}
+
+/* ==========================================
+   AFFILIATE-HINWEIS
+   ==========================================
+   Normale Lesegroesse, eigener Kasten, oberhalb des
+   Copyrights. Nicht 10 Pixel klein ganz unten - ein Hinweis,
+   den niemand lesen kann, ist keiner. */
+.sy-fuss-affiliate {
+  padding: 18px 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--primary);
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-bottom: 26px;
+}
+
+.sy-fuss-unten {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.sy-fuss-ort {
+  color: var(--text-dim);
+}
+
+@media (max-width: 880px) {
+  .sy-fuss-oben {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 560px) {
+  .sy-fuss-innen { padding: 40px 16px 24px; }
+
+  .sy-fuss-spalten {
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+  }
+
+  .sy-fuss-unten {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

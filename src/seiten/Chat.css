@@ -1,0 +1,685 @@
+/* ============================================
+   SYNORA - Chat
+   ============================================ */
+
+.ch-raum {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  /* Drei Spalten wie in der Vorlage: Leiste, Unterhaltung,
+     Infospalte. Die mittlere nimmt den Rest - sie ist die
+     einzige, die mitwachsen soll. */
+  grid-template-columns: 252px minmax(0, 1fr) 290px;
+  gap: 18px;
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 20px 24px 24px;
+  /* Kopfzeile abziehen, damit die Unterhaltung scrollt und nicht
+     die ganze Seite. */
+  height: calc(100vh - 72px);
+}
+
+/* ==========================================
+   LEISTE
+   ========================================== */
+.ch-leiste {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 16px 14px;
+  overflow-y: auto;
+}
+
+.ch-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ch-nav-punkt,
+.ch-nav-aus {
+  display: flex;
+  align-items: center;
+  /* Ohne das brechen "Chat-Verlauf" und "Gespeicherte Produkte"
+     auf zwei Zeilen, sobald das Abzeichen danebensteht - die
+     Leiste sieht dann unruhig aus. */
+  white-space: nowrap;
+  gap: 11px;
+  width: 100%;
+  padding: 11px 13px;
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  text-align: left;
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ch-nav-punkt:hover {
+  background: rgba(255, 255, 255, 0.045);
+  color: var(--text);
+}
+
+/* Der Knopf hiess frueher .ch-leiste-neu und erbte Innenabstand
+   und Ausrichtung von .ch-nav-punkt. Beim Umbenennen fiel das
+   weg - der Knopf war danach flach und der Text klebte am Rand.
+   Darum steht hier jetzt alles, was er braucht. */
+.ch-neu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 11px;
+  background: var(--gradient-brand);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 7px;
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.ch-neu:active { transform: translateY(1px); }
+
+.ch-neu:hover { color: #fff; opacity: 0.93; }
+
+/* Noch nicht gebaut: sichtbar, aber nicht anklickbar. */
+.ch-nav-aus {
+  cursor: default;
+  color: var(--text-dim);
+  opacity: 0.72;
+}
+
+.ch-bald {
+  margin-left: auto;
+  font-size: 0.64rem;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--score-mittel);
+  border: 1px solid rgba(234, 179, 8, 0.32);
+  border-radius: 5px;
+  padding: 2px 5px;
+  white-space: nowrap;
+}
+
+.ch-symbol { width: 18px; text-align: center; flex-shrink: 0; }
+
+.ch-premium {
+  margin-top: auto;
+  display: block;
+  padding: 15px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.16), rgba(var(--accent-purple-rgb), 0.16));
+  border: 1px solid var(--border-glow);
+  text-decoration: none;
+}
+
+.ch-premium strong {
+  display: block;
+  color: var(--text);
+  font-size: 0.9rem;
+  margin-bottom: 3px;
+}
+
+.ch-premium span { color: var(--text-muted); font-size: 0.8rem; }
+
+/* ==========================================
+   MITTE
+   ========================================== */
+.ch-mitte {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.ch-lauf {
+  flex: 1;
+  overflow-y: auto;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.ch-lauf::-webkit-scrollbar { width: 7px; }
+.ch-lauf::-webkit-scrollbar-track { background: transparent; }
+.ch-lauf::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.ch-lauf::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ---------- Begruessung ---------- */
+/* In deiner Vorlage ist die Begruessung eine Karte OBEN im
+   Fenster, kein zentrierter Block. "margin: auto 0" hatte sie
+   in die Mitte geschoben - darunter klaffte eine leere Flaeche
+   und der Blick wusste nicht, wo er anfangen soll. */
+.ch-willkommen {
+  text-align: left;
+  padding: 22px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+}
+
+.ch-willkommen h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--text);
+  margin: 18px 0 10px;
+}
+
+.ch-willkommen > p {
+  color: var(--text-muted);
+  font-size: 0.97rem;
+  line-height: 1.7;
+  max-width: 560px;
+  margin: 0 auto 26px;
+}
+
+/* Drei gleich breite Spalten statt zentriert nebeneinander:
+   So stehen die Ueberschriften untereinander auf einer Linie,
+   auch wenn ein Text laenger ist als die anderen. */
+.ch-merkmale {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px 20px;
+  margin: 18px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.ch-merkmale strong {
+  display: block;
+  color: var(--primary-light);
+  font-size: 0.88rem;
+  margin-bottom: 2px;
+}
+
+.ch-merkmale span { color: var(--text-dim); font-size: 0.8rem; }
+
+.ch-nachricht { display: flex; flex-direction: column; }
+.ch-nutzer    { align-items: flex-end; }
+.ch-synora    { align-items: flex-start; }
+
+.ch-absender {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 7px;
+}
+
+.ch-blase {
+  max-width: 76%;
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.ch-nutzer .ch-blase {
+  background: rgba(var(--primary-rgb), 0.16);
+  border: 1px solid var(--border-glow);
+  border-radius: 16px 16px 4px 16px;
+  color: var(--text);
+}
+
+.ch-synora .ch-blase {
+  background: rgba(255, 255, 255, 0.032);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px 16px 16px 4px;
+  color: var(--text);
+}
+
+.ch-text { white-space: pre-wrap; }
+
+.ch-blase-fehler {
+  background: rgba(240, 114, 122, 0.1) !important;
+  border-color: rgba(240, 114, 122, 0.3) !important;
+}
+
+.ch-blase-limit {
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.12), rgba(var(--accent-purple-rgb), 0.12)) !important;
+  border-color: var(--border-glow) !important;
+}
+
+.ch-limit-knopf {
+  display: inline-block;
+  margin-top: 13px;
+  padding: 10px 20px;
+  background: var(--gradient-brand);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 9px;
+  text-decoration: none;
+}
+
+.ch-optionen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 13px;
+}
+
+.ch-optionen button {
+  background: var(--glass-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.86rem;
+  padding: 8px 15px;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ch-optionen button:hover {
+  border-color: var(--primary);
+  color: var(--primary-light);
+}
+
+/* ---------- Produkte ---------- */
+.ch-produkte { width: 100%; margin-top: 18px; }
+
+.ch-produkte-titel {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+/* Drei nebeneinander wie in der Vorlage.
+   auto-fit mit einer Mindestbreite statt fester Spaltenzahl:
+   Wird die Mitte schmaler (Infospalte eingeblendet, kleineres
+   Fenster), rutschen die Karten von selbst auf zwei und dann
+   auf eine Spalte. Mit "repeat(3, 1fr)" wuerden sie stattdessen
+   immer schmaler und irgendwann unlesbar. */
+.ch-produkte-raster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+
+/* ---------- Laedt ---------- */
+.ch-blase-laedt { display: flex; align-items: center; gap: 11px; }
+
+.ch-punkte { display: flex; gap: 5px; }
+
+.ch-punkte i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  animation: chHuepf 1.4s ease-in-out infinite;
+}
+
+.ch-punkte i:nth-child(2) { animation-delay: 0.2s; }
+.ch-punkte i:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes chHuepf {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30%           { transform: translateY(-7px); opacity: 1; }
+}
+
+.ch-laedt-text { color: var(--text-muted); font-size: 0.88rem; }
+
+/* ==========================================
+   EINGABE
+   ========================================== */
+.ch-eingabe {
+  display: flex;
+  gap: 11px;
+  align-items: flex-end;
+  padding: 14px 18px;
+  border-top: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.ch-eingabe textarea {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  /* 16px: unter dieser Groesse zoomt iOS Safari beim Antippen
+     automatisch in die Seite hinein. */
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 10px 0;
+  max-height: 140px;
+}
+
+.ch-eingabe textarea::placeholder { color: var(--text-dim); }
+.ch-eingabe textarea:disabled { opacity: 0.5; }
+
+.ch-eingabe button[type="submit"] {
+  flex-shrink: 0;
+  background: var(--gradient-brand);
+  border: none;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.3);
+}
+
+.ch-eingabe button[type="submit"]:hover:not(:disabled) { transform: translateY(-1px); }
+.ch-eingabe button[type="submit"]:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+/* ==========================================
+   RECHTSLINKS IN DER LEISTE
+   ==========================================
+   Schmal und unaufdringlich, aber vorhanden. Impressum und
+   Datenschutz muessen von jeder Seite erreichbar sein - auf
+   dieser gab es bis zum 08.10.2026 keinen Weg dorthin. */
+.ch-recht {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.ch-recht a {
+  font-size: 0.74rem;
+  color: var(--text-dim);
+  text-decoration: none;
+}
+
+.ch-recht a:hover {
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+
+/* ==========================================
+   LEISTE: ABSCHNITT UND LEERER VERLAUF
+   ========================================== */
+.ch-abschnitt h2 {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 0 0 8px 4px;
+  font-weight: 600;
+}
+
+.ch-leer {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+  margin: 0;
+  padding: 0 4px;
+}
+
+/* ==========================================
+   BEGRUESSUNG
+   ========================================== */
+/* In der Vorlage steht das Zeichen LINKS neben dem Text, nicht
+   darueber. Das spart eine Bildschirmhoehe - auf dem Handy ist
+   das der Unterschied, ob das Eingabefeld noch sichtbar ist. */
+.ch-will-kopf {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  text-align: left;
+}
+
+.ch-will-kopf h1 { margin: 0 0 6px; }
+.ch-will-kopf p  { margin: 0; }
+
+/* ==========================================
+   EINGABE UNTEN
+   ========================================== */
+.ch-unten {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ch-eingabe-knoepfe {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.ch-knopf-leer {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 11px;
+  padding: 12px 15px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.2s ease, color 0.2s ease;
+  box-shadow: none;
+}
+
+.ch-knopf-leer:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.ch-beispiele {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 0 2px;
+}
+
+.ch-beispiele-titel {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+.ch-beispiele button {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.ch-beispiele button:hover {
+  border-color: var(--primary);
+  color: var(--text);
+  background: rgba(var(--primary-rgb), 0.08);
+}
+
+/* ==========================================
+   INFOSPALTE RECHTS
+   ========================================== */
+.ch-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.ch-karte {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 15px;
+  padding: 15px 16px;
+}
+
+.ch-karte h2 {
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 10px;
+}
+
+.ch-klein {
+  font-size: 0.79rem;
+  line-height: 1.55;
+  color: var(--text-dim);
+  margin: 10px 0 0;
+}
+
+/* ---------- Preisbereich ---------- */
+.ch-budget-wert {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  margin-bottom: 10px;
+}
+
+.ch-karte input[type="range"] {
+  width: 100%;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.ch-budget-enden {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* ---------- Shops ---------- */
+/* Nur Namen, keine fremden Logos - die gehoeren digitec,
+   Galaxus und Interdiscount, nicht uns. */
+.ch-shops {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ch-shops li {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 5px 9px;
+}
+
+/* ---------- Score ---------- */
+.ch-score {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.ch-score strong {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  line-height: 1;
+}
+
+.ch-score span {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+/* ==========================================
+   KLEINE BILDSCHIRME
+   ========================================== */
+/* Unter 1280 Pixeln ist fuer drei Spalten kein Platz mehr. Die
+   Infospalte geht zuerst: Sie erklaert nur, sie macht nichts.
+   Der Preisregler ist dann nicht mehr da - man kann das Budget
+   aber jederzeit in die Frage tippen ("unter 800 CHF"), und
+   genau das hat der Regler auch getan. */
+@media (max-width: 1280px) {
+  .ch-raum { grid-template-columns: 252px minmax(0, 1fr); }
+  .ch-info { display: none; }
+}
+
+@media (max-width: 960px) {
+  .ch-raum {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: calc(100vh - 72px);
+    padding: 14px 16px 18px;
+  }
+
+  /* Die Leiste wird zu einer Zeile, durch die man wischt. */
+  .ch-leiste {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px;
+  }
+
+  .ch-nav { flex-direction: row; gap: 7px; }
+  .ch-nav-punkt, .ch-nav-aus { white-space: nowrap; padding: 9px 13px; }
+  .ch-neu { margin-bottom: 0; white-space: nowrap; }
+  /* Der leere Verlauf braucht in der Zeile keinen Platz. */
+  .ch-abschnitt { display: none; }
+  /* Quer liegend gibt es kein "unten" - die Links wandern ans
+     Ende der Zeile statt an den unteren Rand. */
+  .ch-recht {
+    margin-top: 0;
+    margin-left: auto;
+    padding-top: 0;
+    border-top: none;
+    flex-wrap: nowrap;
+  }
+  .ch-bald { display: none; }
+  .ch-premium { margin-top: 0; margin-left: auto; white-space: nowrap; padding: 10px 14px; }
+  .ch-premium span { display: none; }
+
+  .ch-mitte { min-height: 68vh; }
+  .ch-blase { max-width: 92%; }
+}
+
+@media (max-width: 560px) {
+  .ch-lauf { padding: 16px; gap: 18px; }
+  .ch-eingabe { padding: 11px 13px; }
+  .ch-eingabe button[type="submit"] { padding: 12px 17px; }
+  .ch-merkmale { gap: 16px; }
+
+  /* Hochkant passen Feld und zwei Knoepfe nicht nebeneinander. */
+  .ch-eingabe { flex-wrap: wrap; }
+  .ch-eingabe textarea { flex: 1 1 100%; }
+  .ch-eingabe-knoepfe { width: 100%; }
+  .ch-eingabe-knoepfe button { flex: 1; }
+  .ch-will-kopf { flex-direction: column; gap: 12px; }
+}

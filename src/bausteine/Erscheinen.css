@@ -1,0 +1,37 @@
+/* ============================================
+   SYNORA - Erscheinen beim Scrollen
+   ============================================ */
+
+.sy-erscheinen {
+  opacity: 0;
+  transform: translateY(16px);
+  /* cubic-bezier(.22,.8,.3,1): schnell los, sanft aus. Wirkt
+     wie etwas, das sich setzt - nicht wie etwas, das federt.
+     Federn (bounce) ist der Punkt, an dem es kitschig wird. */
+  transition: opacity 0.5s cubic-bezier(.22, .8, .3, 1),
+              transform 0.5s cubic-bezier(.22, .8, .3, 1);
+  /* will-change nur hier und nicht dauerhaft: Der Browser legt
+     dafuer eine eigene Ebene an, und zu viele davon machen das
+     Scrollen auf schwachen Handys langsamer, nicht schneller. */
+  will-change: opacity, transform;
+}
+
+.sy-erscheinen.sy-da {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* ============================================
+   BEWEGUNG REDUZIEREN
+   ============================================
+   Wer das eingestellt hat, bekommt gar keine. Nicht "weniger" -
+   keine. Ein abgeschwaechter Effekt ist immer noch Bewegung. */
+@media (prefers-reduced-motion: reduce) {
+  .sy-erscheinen {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+}

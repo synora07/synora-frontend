@@ -1,0 +1,56 @@
+/* ============================================
+   SYNORA - Logo
+   ============================================ */
+
+.sy-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 0;
+  user-select: none;
+}
+
+.sy-logo img {
+  display: block;
+  object-fit: contain;
+}
+
+/* Der blaue Schein unter dem Logo. In der Vorlage leuchtet es
+   leicht - hier ueber drop-shadow statt ueber ein zweites
+   Element, das sonst bei jedem Bildaufbau mitgerechnet wird. */
+.sy-logo-leuchtet img {
+  filter: drop-shadow(0 0 12px rgba(var(--primary-rgb), 0.45));
+}
+
+.sy-logo-voll {
+  gap: 12px;
+}
+
+/* ============================================
+   RUHIG, WENN DER NUTZER ES SO WILL
+   ============================================
+   Wer in seinem Betriebssystem "Bewegung reduzieren" eingestellt
+   hat, hat dafuer meist einen Grund - Migraene, Schwindel,
+   Epilepsie. Dann steht das Logo still.
+
+   Das kostet nichts und ist in der Schweiz und der EU Teil der
+   Barrierefreiheit, nicht nur Hoeflichkeit. */
+@media (prefers-reduced-motion: no-preference) {
+  .sy-logo-leuchtet img:first-child {
+    animation: syLogoAtmen 3.4s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes syLogoAtmen {
+  from { filter: drop-shadow(0 0 10px rgba(var(--primary-rgb), 0.35)); }
+  to   { filter: drop-shadow(0 0 20px rgba(var(--primary-rgb), 0.7))
+                 drop-shadow(0 0 36px rgba(var(--accent-purple-rgb), 0.35)); }
+}
+
+@media (max-width: 560px) {
+  /* Auf schmalen Bildschirmen nur das Zeichen - der Schriftzug
+     draengt sonst das Menue aus der Zeile. */
+  .sy-logo-voll picture:last-child {
+    display: none;
+  }
+}

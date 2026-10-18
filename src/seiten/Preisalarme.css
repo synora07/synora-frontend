@@ -1,0 +1,201 @@
+/* ============================================
+   SYNORA - Preisalarme
+   ============================================ */
+
+.pa-seite {
+  position: relative;
+  z-index: 1;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 48px 24px 60px;
+  min-height: 60vh;
+}
+
+.pa-kopf { margin-bottom: 30px; position: relative; }
+
+.pa-kopf h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.7rem, 3.4vw, 2.3rem);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 9px;
+}
+
+.pa-kopf p { color: var(--text-muted); font-size: 1rem; line-height: 1.65; max-width: 580px; }
+
+.pa-zaehler {
+  position: absolute;
+  top: 4px;
+  right: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--primary-light);
+  background: rgba(var(--primary-rgb), 0.1);
+  border: 1px solid var(--border-glow);
+  padding: 6px 13px;
+  border-radius: 20px;
+}
+
+.pa-laedt, .pa-fehler {
+  padding: 30px 0;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.pa-fehler { color: #ffb3b8; }
+
+/* ---------- Leer / Premium ---------- */
+.pa-leer, .pa-premium {
+  text-align: center;
+  padding: 54px 26px;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+}
+
+.pa-leer-symbol { font-size: 2.6rem; display: block; margin-bottom: 16px; opacity: 0.75; }
+
+.pa-leer h2, .pa-premium h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 9px;
+}
+
+.pa-leer p, .pa-premium p {
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  margin-bottom: 22px;
+}
+
+.pa-knopf-voll {
+  display: inline-block;
+  background: var(--gradient-brand);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 13px 28px;
+  border-radius: 11px;
+  text-decoration: none;
+  box-shadow: 0 5px 20px rgba(var(--primary-rgb), 0.34);
+  transition: transform 0.2s ease;
+}
+
+.pa-knopf-voll:hover { transform: translateY(-2px); }
+
+.pa-premium {
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--accent-purple-rgb), 0.1));
+  border-color: var(--border-glow);
+}
+
+/* ---------- Liste ---------- */
+.pa-liste { list-style: none; padding: 0; margin: 0 0 22px; display: flex; flex-direction: column; gap: 13px; }
+
+.pa-eintrag {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  transition: border-color 0.22s ease;
+}
+
+.pa-eintrag:hover { border-color: var(--border-glow); }
+
+.pa-bild {
+  flex-shrink: 0;
+  width: 66px;
+  height: 66px;
+  border-radius: 10px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 1.5rem;
+}
+
+.pa-bild img { width: 100%; height: 100%; object-fit: contain; padding: 5px; }
+
+.pa-text { flex: 1; min-width: 0; }
+
+.pa-text h3 {
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+  margin-bottom: 9px;
+}
+
+.pa-preise { display: flex; flex-wrap: wrap; gap: 20px; }
+
+.pa-preise > span { display: flex; flex-direction: column; gap: 1px; }
+
+.pa-preise small {
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.pa-preise strong {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.pa-jetzt strong { color: var(--primary-light); }
+.pa-start strong { color: var(--text-dim); font-weight: 400; }
+
+.pa-gespart {
+  display: inline-block;
+  margin-top: 9px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  background: rgba(var(--primary-rgb), 0.1);
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+.pa-shop { font-size: 0.8rem; color: var(--text-dim); margin-top: 7px; }
+
+.pa-weg {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pa-weg:hover:not(:disabled) { border-color: #f0727a; color: #f0727a; }
+.pa-weg:disabled { opacity: 0.5; cursor: wait; }
+
+.pa-takt {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  padding: 14px 16px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+}
+
+@media (max-width: 560px) {
+  .pa-seite { padding: 30px 16px 44px; }
+  .pa-zaehler { position: static; display: inline-block; margin-top: 12px; }
+  .pa-eintrag { flex-wrap: wrap; gap: 12px; }
+  .pa-bild { width: 54px; height: 54px; }
+  .pa-text { flex: 1 1 calc(100% - 120px); }
+  .pa-preise { gap: 14px; }
+}

@@ -1,0 +1,119 @@
+/* ============================================
+   SYNORA - Eingabefeld
+   ============================================ */
+
+.sy-feld {
+  margin-bottom: 16px;
+}
+
+.sy-feld label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 7px;
+}
+
+.sy-feld-rahmen {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 11px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sy-feld-rahmen:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.16);
+}
+
+.sy-feld-symbol {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.sy-feld input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  /* 16px ist kein Zufall: Bei kleinerer Schrift zoomt iOS Safari
+     beim Antippen automatisch hinein, und der Nutzer sitzt
+     ploetzlich in einer vergroesserten Seite fest. */
+  font-size: 16px;
+  padding: 13px 0;
+}
+
+.sy-feld input::placeholder {
+  color: var(--text-dim);
+}
+
+/* Die gelbe Autofill-Fuellung von Chrome ueberschreibt sonst den
+   dunklen Hintergrund und macht das Feld unlesbar. */
+.sy-feld input:-webkit-autofill,
+.sy-feld input:-webkit-autofill:hover,
+.sy-feld input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  -webkit-box-shadow: 0 0 0 1000px #0d1730 inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.sy-feld-auge {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sy-feld-auge:hover {
+  opacity: 1;
+}
+
+.sy-feld-hinweis {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+/* ==========================================
+   FEHLER
+   ==========================================
+   Rot allein reicht nicht: Rund acht Prozent der Maenner sehen
+   Rot und Gruen nicht zuverlaessig auseinander. Darum kommt zum
+   roten Rand immer ein Text dazu, und der Text traegt ein
+   Warnzeichen. */
+.sy-feld-fehler .sy-feld-rahmen {
+  border-color: #f0727a;
+}
+
+.sy-feld-fehler .sy-feld-rahmen:focus-within {
+  box-shadow: 0 0 0 3px rgba(240, 114, 122, 0.18);
+}
+
+.sy-feld-meldung {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #f0727a;
+  margin-top: 7px;
+  line-height: 1.45;
+}
+
+.sy-feld-meldung::before {
+  content: '⚠';
+  flex-shrink: 0;
+}

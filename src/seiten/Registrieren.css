@@ -1,0 +1,46 @@
+/* ============================================
+   SYNORA - Passwort-Staerke
+   ============================================ */
+
+.rg-staerke {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -6px 0 16px;
+  flex-wrap: wrap;
+}
+
+.rg-staerke-balken {
+  display: flex;
+  gap: 5px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.rg-staerke-balken span {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background 0.3s ease;
+}
+
+/* Farbe nach Staerke. Rot und Gelb sind nicht "falsch" - sie
+   sagen nur, wie lange jemand zum Erraten braeuchte. Darum
+   steht daneben immer auch ein Wort: Farbe allein reicht fuer
+   Rot-Gruen-Blinde nicht. */
+.rg-staerke-balken .rg-an.rg-stufe-1 { background: #f0727a; }
+.rg-staerke-balken .rg-an.rg-stufe-2 { background: var(--score-mittel); }
+.rg-staerke-balken .rg-an.rg-stufe-3 { background: var(--primary-light); }
+.rg-staerke-balken .rg-an.rg-stufe-4 { background: var(--accent-cyan); }
+
+.rg-staerke-text {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.rg-staerke-text strong {
+  color: var(--text-muted);
+}
