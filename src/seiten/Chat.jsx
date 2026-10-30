@@ -49,6 +49,49 @@
 // Genau das steht auch auf der Seite. Ein Regler, der etwas
 // anderes tut als er verspricht, waere dasselbe Problem wie die
 // "3 kostenlosen Suchen" auf der alten Startseite.
+//
+// ============================================
+// DIE RUECKFRAGE-SCHLEIFE - GEFUNDEN am 30.10.2026
+// ============================================
+// Beim Gesamttest: "playstation" eingegeben -> SYNORA fragt
+// "Damit ich nicht raten muss: Wofuer brauchst du es?".
+// Antwort "spielen" -> DIESELBE Frage noch einmal. Endlos.
+// Es kam nie ein Ergebnis.
+//
+// Drei Fehler, alle in dieser Datei:
+//
+//   1. Der Verlauf wurde nie mitgeschickt.
+//      Das Backend liest ihn aus req.body.conversationHistory
+//      (chatController.js, Zeile 671). Hier stand nur
+//      { message: text }. Kam das Feld nicht mit, war der
+//      Verlauf im Backend ein leeres Array - ohne Fehler, ohne
+//      Warnung. Damit schalteten sich zwei Schutzmechanismen
+//      in rueckfrage.js still ab:
+//
+//        schonGefragt()     hoechstens EINE Frage pro Gespraech
+//        zusammenfuehren()  "playstation" + "spielen" verbinden
+//
+//      Beide brauchen den Verlauf. Ohne ihn sah das Backend bei
+//      jeder Nachricht ein brandneues Gespraech.
+//
+//   2. Die Markierung istRueckfrage wurde nicht gespeichert.
+//      Das Backend markiert seine eigene Rueckfrage in der
+//      Antwort (chatController.js, Zeile 753). Ohne diese
+//      Markierung im Verlauf erkennt das Backend zwar seine
+//      festen Fragen am Text wieder - die vom Modell erzeugten
+//      Fragen aus rueckfrageSchlau.js aber nicht.
+//
+//   3. Die Antwortknoepfe fehlten.
+//      Das Backend schickt die Optionen als "modelOptions"
+//      (alte Form) und "fragen" (neue Form). Hier wurde
+//      d.options und d.optionen gelesen - beides gibt es
+//      nicht. Darum erschienen nie Knoepfe, und man musste
+//      von Hand tippen. Genau dadurch wurde Fehler 1 erst
+//      sichtbar.
+//
+// Die drei haengen zusammen: ohne Knoepfe tippt man, beim
+// Tippen braucht es den Verlauf, und der Verlauf braucht die
+// Markierung.
 // ============================================
 
 import { useEffect, useRef, useState } from 'react';
@@ -65,6 +108,12 @@ import './Chat.css';
 // aber so tun, als waere sie eine.
 const BUDGET_MAX = 3000;
 const BUDGET_SCHRITT = 50;
+
+// Wie viele Nachrichten hoechstens mitgeschickt werden. Das
+// Backend braucht nur die letzten beiden, um eine Antwort auf
+// eine Rueckfrage zu erkennen. 20 ist grosszuegig und haelt den
+// Umfang der Anfrage auch nach einer langen Unterhaltung klein.
+const VERLAUF_MAX = 20;
 
 // Steht in der Frage schon ein Budget, haengt der Regler keines
 // an. Sonst stuende da "Laptop unter 800 CHF unter 1000 CHF".
@@ -138,6 +187,28 @@ export default function Chat() {
     return `${text} unter ${budget} CHF`;
   }
 
+  // ---------- Der Verlauf fuer das Backend ----------
+  // Das Backend kennt eine andere Form als die Anzeige hier:
+  // role/content statt wer/text. Fehlermeldungen, der
+  // Limit-Hinweis und der "ohne Konto"-Hinweis gehoeren nicht
+  // dazu - das sind Hinweise der Oberflaeche, keine Saetze aus
+  // der Unterhaltung.
+  //
+  // WICHTIG: Die aktuelle Nachricht steht hier noch NICHT drin.
+  // setNachrichten() weiter unten wirkt erst beim naechsten
+  // Durchlauf, und das Backend bekommt den aktuellen Text
+  // ohnehin getrennt als "message".
+  function verlaufFuerBackend() {
+    return nachrichten
+      .filter((n) => n.text && !n.fehler && !n.limit && !n.ohneKonto)
+      .map((n) => ({
+        role: n.wer === 'nutzer' ? 'user' : 'assistant',
+        content: n.text,
+        istRueckfrage: !!n.istRueckfrage
+      }))
+      .slice(-VERLAUF_MAX);
+  }
+
   async function senden(e, textRoh) {
     e?.preventDefault();
     const text = frageMitBudget((textRoh ?? eingabe).trim());
@@ -149,13 +220,23 @@ export default function Chat() {
       return;
     }
 
+    // Vor setNachrichten holen: danach waere es derselbe Wert,
+    // aber so ist unmissverstaendlich, dass die aktuelle
+    // Nachricht nicht im Verlauf steckt.
+    const verlauf = verlaufFuerBackend();
+
     setNachrichten((n) => [...n, { wer: 'nutzer', text }]);
     setEingabe('');
     setLaeuft(true);
 
     const r = await anfrage(PFADE.chat, {
       methode: 'POST',
-      koerper: { message: text }
+      koerper: {
+        message: text,
+        // Ohne dieses Feld fragt SYNORA endlos dieselbe Frage.
+        // Siehe den Abschnitt oben im Kopf der Datei.
+        conversationHistory: verlauf
+      }
     });
 
     setLaeuft(false);
@@ -179,11 +260,41 @@ export default function Chat() {
     }
 
     const d = r.daten || {};
+
+    // ---------- Rueckfrage auswerten ----------
+    // Bei einer Rueckfrage schickt das Backend:
+    //   fragen        Liste {frage, optionen, mehrfach}  (neue Form)
+    //   modelOptions  nur die Optionen der ersten Frage  (alte Form)
+    //   istRueckfrage die Markierung
+    //
+    // Gezeigt wird hier EINE Frage. Schickt das Backend mehrere,
+    // ist d.response nur eine Einleitung ("drei kurze Fragen:") -
+    // und eine Einleitung ohne Frage darunter waere sinnlos.
+    // Darum steht dann der Text der ersten Frage in der Blase.
+    const fragen = Array.isArray(d.fragen) ? d.fragen : [];
+    const ersteFrage = fragen.length > 0 ? fragen[0] : null;
+
+    const antwortText =
+      fragen.length > 1 && ersteFrage && ersteFrage.frage
+        ? ersteFrage.frage
+        : (d.response || d.message || d.antwort || '');
+
+    // Vier moegliche Namen, weil Backend und Frontend hier
+    // auseinandergelaufen sind. Der erste Treffer gewinnt.
+    let optionen = [];
+    if (ersteFrage && Array.isArray(ersteFrage.optionen)) optionen = ersteFrage.optionen;
+    else if (Array.isArray(d.modelOptions)) optionen = d.modelOptions;
+    else if (Array.isArray(d.options)) optionen = d.options;
+    else if (Array.isArray(d.optionen)) optionen = d.optionen;
+
     setNachrichten((n) => [...n, {
       wer: 'synora',
-      text: d.response || d.message || d.antwort || '',
+      text: antwortText,
+      // Muss mit in den Verlauf, sonst weiss das Backend beim
+      // naechsten Mal nicht, dass es schon gefragt hat.
+      istRueckfrage: !!d.istRueckfrage,
       produkte: Array.isArray(d.products) ? d.products : (Array.isArray(d.produkte) ? d.produkte : []),
-      optionen: Array.isArray(d.options) ? d.options : (Array.isArray(d.optionen) ? d.optionen : [])
+      optionen
     }]);
 
     if (d.limit || d.stand) setStand(d.limit || d.stand);
