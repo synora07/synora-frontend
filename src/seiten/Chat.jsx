@@ -136,6 +136,50 @@ function datumKurz(wert) {
   }
 }
 
+// ============================================
+// Aus einer Serverantwort eine Nachricht fuer die Anzeige bauen.
+// ============================================
+// Wird an ZWEI Stellen gebraucht: bei einer frischen Antwort und beim
+// Wiederoeffnen eines gespeicherten Gespraechs. Darum steht sie hier
+// und nicht in senden() - ein alter Chat soll genauso aussehen wie
+// ein neuer.
+function nachrichtAusAntwort(d) {
+  const daten = d || {};
+
+  // Bei einer Rueckfrage schickt das Backend:
+  //   fragen        Liste {frage, optionen, mehrfach}  (neue Form)
+  //   modelOptions  nur die Optionen der ersten Frage  (alte Form)
+  //   istRueckfrage die Markierung
+  const fragen = Array.isArray(daten.fragen) ? daten.fragen : [];
+  const ersteFrage = fragen.length > 0 ? fragen[0] : null;
+
+  // Bei mehreren Fragen ist daten.response nur eine Einleitung
+  // ("drei kurze Fragen:"). Eine Einleitung ohne Frage darunter waere
+  // sinnlos, darum steht dann die erste Frage in der Blase.
+  const text =
+    fragen.length > 1 && ersteFrage && ersteFrage.frage
+      ? ersteFrage.frage
+      : (daten.response || daten.message || daten.antwort || '');
+
+  // Vier moegliche Namen, weil Backend und Frontend hier
+  // auseinandergelaufen sind. Der erste Treffer gewinnt.
+  let optionen = [];
+  if (ersteFrage && Array.isArray(ersteFrage.optionen)) optionen = ersteFrage.optionen;
+  else if (Array.isArray(daten.modelOptions)) optionen = daten.modelOptions;
+  else if (Array.isArray(daten.options)) optionen = daten.options;
+  else if (Array.isArray(daten.optionen)) optionen = daten.optionen;
+
+  return {
+    wer: 'synora',
+    text,
+    istRueckfrage: !!daten.istRueckfrage,
+    produkte: Array.isArray(daten.products)
+      ? daten.products
+      : (Array.isArray(daten.produkte) ? daten.produkte : []),
+    optionen
+  };
+}
+
 export default function Chat() {
   const { t } = useSprache();
   const [nachrichten, setNachrichten] = useState([]);
@@ -144,7 +188,8 @@ export default function Chat() {
   const [stand, setStand] = useState(null);      // wie viele Suchen noch offen
   const [limitVoll, setLimitVoll] = useState(false);
   const [premiumZahl, setPremiumZahl] = useState(null);
-  const [verlauf, setVerlauf] = useState([]);    // letzte Suchen aus dem Konto
+  const [gespraeche, setGespraeche] = useState([]);  // Liste in der Seitenleiste
+  const [chatId, setChatId] = useState(null);        // das laufende Gespraech
   const [budget, setBudget] = useState(0);       // 0 = ohne Grenze
   const endeRef = useRef(null);
   const eingabeRef = useRef(null);
@@ -188,10 +233,10 @@ export default function Chat() {
     return () => { weg = true; };
   }, []);
 
-  // ---------- Verlauf laden ----------
+  // ---------- Gespraechsliste laden ----------
   // Nur fuer Angemeldete: ohne Konto gibt es nichts zu zeigen, und die
-  // Anfrage waere eine 401. Faellt sie aus, bleibt der Verlauf leer und
-  // es steht wieder der Hinweis da - nie eine Fehlermeldung.
+  // Anfrage waere eine 401. Faellt sie aus, bleibt die Liste leer und
+  // es steht der Hinweis da - nie eine Fehlermeldung.
   useEffect(() => {
     if (!angemeldet) return undefined;
     let weg = false;
@@ -199,10 +244,42 @@ export default function Chat() {
       const r = await anfrage(PFADE.chatVerlauf);
       if (weg || !r.ok) return;
       const liste = r.daten && r.daten.history;
-      setVerlauf(Array.isArray(liste) ? liste : []);
+      setGespraeche(Array.isArray(liste) ? liste : []);
     })();
     return () => { weg = true; };
   }, [angemeldet]);
+
+  /** Nach dem Senden: die Liste neu holen, damit das neue Gespraech
+   *  oben auftaucht und der Titel stimmt. */
+  async function gespraecheNachladen() {
+    if (!angemeldet) return;
+    const r = await anfrage(PFADE.chatVerlauf);
+    if (!r.ok) return;
+    const liste = r.daten && r.daten.history;
+    if (Array.isArray(liste)) setGespraeche(liste);
+  }
+
+  /** Ein gespeichertes Gespraech wieder aufmachen.
+   *
+   *  Kostet nichts: Es wird nicht neu gesucht, sondern das gezeigt,
+   *  was damals gespeichert wurde. */
+  async function gespraechOeffnen(id) {
+    if (laeuft) return;
+    const r = await anfrage(`${PFADE.chatVerlauf}/${id}`);
+    if (!r.ok || !r.daten) return;
+
+    const gespeichert = Array.isArray(r.daten.nachrichten) ? r.daten.nachrichten : [];
+    setNachrichten(
+      gespeichert.map((n) =>
+        n.wer === 'nutzer'
+          ? { wer: 'nutzer', text: n.text || '' }
+          : nachrichtAusAntwort(n.daten || { response: n.text })
+      )
+    );
+    setChatId(id);
+    setEingabe('');
+    setLimitVoll(false);
+  }
 
   // Nach jeder neuen Nachricht nach unten rollen.
   useEffect(() => {
@@ -261,8 +338,10 @@ export default function Chat() {
       koerper: {
         message: text,
         // Ohne dieses Feld fragt SYNORA endlos dieselbe Frage.
-        // Siehe den Abschnitt oben im Kopf der Datei.
-        conversationHistory: verlauf
+        conversationHistory: verlauf,
+        // Die Nummer des Gespraechs. Beim ersten Mal null - dann legt
+        // der Server eines an und schickt die Nummer zurueck.
+        chatId
       }
     });
 
@@ -288,41 +367,13 @@ export default function Chat() {
 
     const d = r.daten || {};
 
-    // ---------- Rueckfrage auswerten ----------
-    // Bei einer Rueckfrage schickt das Backend:
-    //   fragen        Liste {frage, optionen, mehrfach}  (neue Form)
-    //   modelOptions  nur die Optionen der ersten Frage  (alte Form)
-    //   istRueckfrage die Markierung
-    //
-    // Gezeigt wird hier EINE Frage. Schickt das Backend mehrere,
-    // ist d.response nur eine Einleitung ("drei kurze Fragen:") -
-    // und eine Einleitung ohne Frage darunter waere sinnlos.
-    // Darum steht dann der Text der ersten Frage in der Blase.
-    const fragen = Array.isArray(d.fragen) ? d.fragen : [];
-    const ersteFrage = fragen.length > 0 ? fragen[0] : null;
+    // Der Server hat das Gespraech angelegt oder fortgesetzt und
+    // schickt die Nummer mit. Ab jetzt landet alles im selben Chat.
+    if (d.chatId) setChatId(d.chatId);
 
-    const antwortText =
-      fragen.length > 1 && ersteFrage && ersteFrage.frage
-        ? ersteFrage.frage
-        : (d.response || d.message || d.antwort || '');
+    setNachrichten((n) => [...n, nachrichtAusAntwort(d)]);
 
-    // Vier moegliche Namen, weil Backend und Frontend hier
-    // auseinandergelaufen sind. Der erste Treffer gewinnt.
-    let optionen = [];
-    if (ersteFrage && Array.isArray(ersteFrage.optionen)) optionen = ersteFrage.optionen;
-    else if (Array.isArray(d.modelOptions)) optionen = d.modelOptions;
-    else if (Array.isArray(d.options)) optionen = d.options;
-    else if (Array.isArray(d.optionen)) optionen = d.optionen;
-
-    setNachrichten((n) => [...n, {
-      wer: 'synora',
-      text: antwortText,
-      // Muss mit in den Verlauf, sonst weiss das Backend beim
-      // naechsten Mal nicht, dass es schon gefragt hat.
-      istRueckfrage: !!d.istRueckfrage,
-      produkte: Array.isArray(d.products) ? d.products : (Array.isArray(d.produkte) ? d.produkte : []),
-      optionen
-    }]);
+    gespraecheNachladen();
 
     if (d.limit || d.stand) setStand(d.limit || d.stand);
   }
@@ -339,6 +390,8 @@ export default function Chat() {
     setNachrichten([]);
     setEingabe('');
     setLimitVoll(false);
+    // Ohne das landen die naechsten Nachrichten im alten Gespraech.
+    setChatId(null);
     eingabeRef.current?.focus();
   }
 
@@ -382,16 +435,16 @@ export default function Chat() {
             {/* Seit dem 08.11.2026 liefert /api/chat/history echte
                 Daten aus dem Suchprotokoll. Ist noch nichts da -
                 neues Konto, oder abgemeldet - bleibt der Hinweis. */}
-            {verlauf.length === 0 ? (
+            {gespraeche.length === 0 ? (
               <p className="ch-leer">{t('chat.verlaufLeer')}</p>
             ) : (
               <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {verlauf.map((v) => (
+                {gespraeche.map((v) => (
                   <li key={v.id}>
                     <button
                       type="button"
-                      title={v.frage}
-                      onClick={() => { setEingabe(v.frage); eingabeRef.current?.focus(); }}
+                      title={v.titel}
+                      onClick={() => gespraechOeffnen(v.id)}
                       style={{
                         width: '100%',
                         display: 'flex',
@@ -409,7 +462,7 @@ export default function Chat() {
                       }}
                     >
                       <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {v.frage}
+                        {v.titel}
                       </span>
                       <span style={{ opacity: 0.6, flexShrink: 0 }}>{datumKurz(v.zeit)}</span>
                     </button>
