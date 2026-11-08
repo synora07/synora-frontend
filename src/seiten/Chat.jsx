@@ -126,6 +126,16 @@ function hatSchonBudget(text) {
   );
 }
 
+// Kurzes Datum fuer die Seitenleiste: "08.11.". Mehr passt dort nicht
+// hin, und das Jahr interessiert bei den letzten zwanzig Suchen nicht.
+function datumKurz(wert) {
+  try {
+    return new Date(wert).toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit' });
+  } catch (_) {
+    return '';
+  }
+}
+
 export default function Chat() {
   const { t } = useSprache();
   const [nachrichten, setNachrichten] = useState([]);
@@ -134,6 +144,7 @@ export default function Chat() {
   const [stand, setStand] = useState(null);      // wie viele Suchen noch offen
   const [limitVoll, setLimitVoll] = useState(false);
   const [premiumZahl, setPremiumZahl] = useState(null);
+  const [verlauf, setVerlauf] = useState([]);    // letzte Suchen aus dem Konto
   const [budget, setBudget] = useState(0);       // 0 = ohne Grenze
   const endeRef = useRef(null);
   const eingabeRef = useRef(null);
@@ -176,6 +187,22 @@ export default function Chat() {
     })();
     return () => { weg = true; };
   }, []);
+
+  // ---------- Verlauf laden ----------
+  // Nur fuer Angemeldete: ohne Konto gibt es nichts zu zeigen, und die
+  // Anfrage waere eine 401. Faellt sie aus, bleibt der Verlauf leer und
+  // es steht wieder der Hinweis da - nie eine Fehlermeldung.
+  useEffect(() => {
+    if (!angemeldet) return undefined;
+    let weg = false;
+    (async () => {
+      const r = await anfrage(PFADE.chatVerlauf);
+      if (weg || !r.ok) return;
+      const liste = r.daten && r.daten.history;
+      setVerlauf(Array.isArray(liste) ? liste : []);
+    })();
+    return () => { weg = true; };
+  }, [angemeldet]);
 
   // Nach jeder neuen Nachricht nach unten rollen.
   useEffect(() => {
@@ -332,10 +359,11 @@ export default function Chat() {
                 der sich anklicken laesst und dann nichts tut, ist
                 schlimmer als einer, der ehrlich sagt, dass er noch
                 nicht fertig ist. */}
-            <span className="ch-nav-aus" title={t('chat.nochNicht')}>
+            {/* Kein "BALD" mehr: der Verlauf steht seit dem 08.11.2026
+                weiter unten in dieser Leiste. */}
+            <span className="ch-nav-aus">
               <span className="ch-symbol" aria-hidden="true">🕘</span>
               {t('chat.verlauf')}
-              <span className="ch-bald">{t('allgemein.bald')}</span>
             </span>
 
             <a href="/preisalarme" className="ch-nav-punkt">
@@ -351,10 +379,44 @@ export default function Chat() {
 
           <div className="ch-abschnitt">
             <h2>{t('chat.letzteChats')}</h2>
-            {/* /api/chat/history gibt heute immer eine leere Liste
-                zurueck (steht als TODO im Backend). Darum hier
-                nicht eine erfundene Liste, sondern der Hinweis. */}
-            <p className="ch-leer">{t('chat.verlaufLeer')}</p>
+            {/* Seit dem 08.11.2026 liefert /api/chat/history echte
+                Daten aus dem Suchprotokoll. Ist noch nichts da -
+                neues Konto, oder abgemeldet - bleibt der Hinweis. */}
+            {verlauf.length === 0 ? (
+              <p className="ch-leer">{t('chat.verlaufLeer')}</p>
+            ) : (
+              <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {verlauf.map((v) => (
+                  <li key={v.id}>
+                    <button
+                      type="button"
+                      title={v.frage}
+                      onClick={() => { setEingabe(v.frage); eingabeRef.current?.focus(); }}
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        gap: 8,
+                        textAlign: 'left',
+                        background: 'transparent',
+                        border: 'none',
+                        borderRadius: 8,
+                        padding: '7px 9px',
+                        color: 'inherit',
+                        font: 'inherit',
+                        opacity: 0.85,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {v.frage}
+                      </span>
+                      <span style={{ opacity: 0.6, flexShrink: 0 }}>{datumKurz(v.zeit)}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {/* ============================================
