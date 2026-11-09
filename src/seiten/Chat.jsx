@@ -180,11 +180,31 @@ function nachrichtAusAntwort(d) {
   };
 }
 
+// ---------- Was gerade passiert (angebaut 09.11.2026) ----------
+// Eine Suche dauert gemessen 19 bis 27 Sekunden. Bisher stand die
+// ganze Zeit derselbe Satz da. Jetzt wechselt er entlang der
+// Schritte, die der Server wirklich geht.
+//
+// Die Zeiten sind an den gemessenen Ablauf angelehnt. Kommt die
+// Antwort frueher, werden die spaeteren Saetze nie gezeigt.
+const SCHRITT_ZEITEN = [0, 1500, 5000, 10000, 16000];
+
+// Faellt die Liste aus - alte Uebersetzung, anderer Sprachstand -
+// bleibt der alte Satz stehen. Lieber der alte Text als gar keiner.
+function ladeText(t, schritt) {
+  const liste = t('chat.schritte');
+  if (Array.isArray(liste) && liste.length) {
+    return liste[Math.min(schritt, liste.length - 1)];
+  }
+  return t('chat.denkt');
+}
+
 export default function Chat() {
   const { t } = useSprache();
   const [nachrichten, setNachrichten] = useState([]);
   const [eingabe, setEingabe] = useState('');
   const [laeuft, setLaeuft] = useState(false);
+  const [schritt, setSchritt] = useState(0);     // welcher Satz gerade steht
   const [stand, setStand] = useState(null);      // wie viele Suchen noch offen
   const [limitVoll, setLimitVoll] = useState(false);
   const [premiumZahl, setPremiumZahl] = useState(null);
@@ -280,6 +300,21 @@ export default function Chat() {
     setEingabe('');
     setLimitVoll(false);
   }
+
+  // ---------- Ladetext weiterschalten (angebaut 09.11.2026) ----------
+  // WICHTIG: hier stehen NIE Zahlen und NIE Ergebnisse. Was angezeigt
+  // wird, ist der bekannte Ablauf - suchen, vergleichen, abwaegen,
+  // pruefen. Eine erfundene Zwischenmeldung wie "14 Angebote
+  // gefunden" waere genau das, was dem Modell am 09.11. abgewoehnt
+  // wurde, nur an anderer Stelle.
+  useEffect(() => {
+    if (!laeuft) {
+      setSchritt(0);
+      return undefined;
+    }
+    const uhren = SCHRITT_ZEITEN.map((ms, i) => setTimeout(() => setSchritt(i), ms));
+    return () => uhren.forEach(clearTimeout);
+  }, [laeuft]);
 
   // Nach jeder neuen Nachricht nach unten rollen.
   useEffect(() => {
@@ -572,7 +607,7 @@ export default function Chat() {
                 </span>
                 <div className="ch-blase ch-blase-laedt">
                   <span className="ch-punkte"><i /><i /><i /></span>
-                  <span className="ch-laedt-text">{t('chat.denkt')}</span>
+                  <span className="ch-laedt-text">{ladeText(t, schritt)}</span>
                 </div>
               </article>
             )}

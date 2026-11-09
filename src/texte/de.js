@@ -326,6 +326,17 @@ const deutsch = {
     senden: 'Senden',
     denkt: 'SYNORA sucht …',
 
+    // Angebaut 09.11.2026. Wechselt waehrend der Suche entlang der
+    // Schritte, die der Server wirklich geht. NIE Zahlen, NIE
+    // Ergebnisse - die weiss nur der Server.
+    schritte: [
+      'Ich schaue mir deine Frage an …',
+      'Ich suche in Schweizer Shops …',
+      'Vergleiche die Angebote …',
+      'Wäge Vor- und Nachteile ab …',
+      'Prüfe jede Aussage auf Belege …'
+    ],
+
     empfehlungenTitel: 'Meine Vorschläge für dich',
     alleErgebnisse: 'Alle {zahl} Ergebnisse anzeigen',
     zumShop: 'Zum Shop',

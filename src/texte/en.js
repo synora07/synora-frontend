@@ -250,6 +250,16 @@ const english = {
     senden: 'Send',
     denkt: 'SYNORA is searching …',
 
+    // Added 09.11.2026. Follows the steps the server really takes.
+    // Never numbers, never results - only the server knows those.
+    schritte: [
+      'Looking at your question …',
+      'Searching Swiss shops …',
+      'Comparing the offers …',
+      'Weighing pros and cons …',
+      'Checking every claim for evidence …'
+    ],
+
     empfehlungenTitel: 'My suggestions for you',
     alleErgebnisse: 'Show all {zahl} results',
     zumShop: 'To the shop',
