@@ -275,9 +275,12 @@ export default function Premium() {
                 gratis ? (
                   <a className="btn-primary pr-knopf" href="/registrieren">{t('premium.kontoErstellen')}</a>
                 ) : (
-                  <a className="btn-primary pr-knopf" href={`${KAUF_PFAD}?stufe=${s.schluessel}`}>
-                    {t('premium.waehlen', { name: s.name })}
-                  </a>
+                  <>
+                    <a className="btn-primary pr-knopf" href={KAUF_PFAD}>
+                      {t('premium.waehlen', { name: s.name })}
+                    </a>
+                    <div className="pr-hinweis-bald">{t('premium.kaufHinweis')}</div>
+                  </>
                 )
               ) : gratis ? (
                 <a className="btn-primary pr-knopf" href="/registrieren">

@@ -106,8 +106,8 @@ const ANGABEN = {
   // Seite, zusaetzlich zum Verantwortlichen.
   rechtsform: 'Einzelunternehmen (nicht im Handelsregister eingetragen)',
   name: 'Pavinash Kugathayalan',
-  adresse: 'Flughafenstrasse 12, 8302 Kloten',
-  ort: 'Kloten',
+  adresse: 'Brunnenstrasse 29A, 8610 Uster',
+  ort: 'Uster',
   email: 'info@synora.li',
 
   // Leer, weil nicht eingetragen. Eine UID wird erst vergeben, wenn
@@ -125,7 +125,7 @@ const ANGABEN = {
   // Zahlungsanbieter zu nennen, wenn nichts verkauft wird.
   // Am Tag, an dem Stripe angeht, hier eintragen:
   //   'Stripe Payments Europe, Limited, Irland'
-  zahlungsanbieter: ''
+  zahlungsanbieter: 'Stripe Payments Europe, Limited, Irland'
 };
 
 // ============================================
@@ -187,8 +187,26 @@ const DIENSTLEISTER = [
   {
     firma: 'Perplexity AI, Inc.',
     land: 'USA',
-    zweck: 'Formuliert die Empfehlung und ordnet die Produkte',
+    zweck: 'Sucht Erfahrungsberichte und bekannte Mängel zu Produkten',
     daten: 'Der Text deiner Anfrage'
+  },
+  {
+    firma: 'Anthropic, PBC',
+    land: 'USA',
+    zweck: 'Bewertet die Produkte und formuliert die Antwort (Claude)',
+    daten: 'Der Text deiner Anfrage und die gefundenen Angebote'
+  },
+  {
+    firma: 'OpenAI (ChatGPT-Schnittstelle)',
+    land: 'USA',
+    zweck: 'Bewertet die Produkte als zweite, unabhängige Meinung',
+    daten: 'Der Text deiner Anfrage und die gefundenen Angebote'
+  },
+  {
+    firma: 'Stripe Payments Europe, Limited',
+    land: 'Irland (Verarbeitung auch in den USA)',
+    zweck: 'Wickelt die Zahlung für Kiara Plus ab',
+    daten: 'Name, E-Mail-Adresse und Zahlungsdaten. SYNORA sieht keine Kartennummern.'
   },
   {
     firma: 'Brevo (Sendinblue SAS)',
@@ -701,7 +719,7 @@ function Nutzung({ daten }) {
       <h2>{nr()}. Wie viele Suchen dir zustehen</h2>
       <p>
         Das hängt von deinem Tarif ab. Die geltenden Zahlen stehen auf der{' '}
-        <a href="/premium">Premium-Seite</a>.
+        <a href="/premium">Preisseite</a>.
       </p>
       <p>
         Sie werden dort direkt aus dem System gelesen, das sie auch durchsetzt – die
@@ -736,28 +754,28 @@ function Nutzung({ daten }) {
         </>
       ) : (
         <p>
-          Die aktuellen Preise stehen auf der <a href="/premium">Premium-Seite</a>.
+          Die aktuellen Preise stehen auf der <a href="/premium">Preisseite</a>.
         </p>
       )}
 
       {daten && daten.verkaufAktiv === false && (
         <p>
-          <strong>Premium ist derzeit nicht käuflich.</strong> Sobald der Verkauf
-          startet, gelten die Preise, die dann auf der Premium-Seite stehen.
+          <strong>Kiara Plus ist derzeit nicht käuflich.</strong> Sobald der Verkauf
+          startet, gelten die Preise, die dann auf der Preisseite stehen.
         </p>
       )}
 
       <h2>{nr()}. Zahlung, Verlängerung, Kündigung</h2>
       <p>
-        Ein Premium-Abo läuft ab dem Kauf für den gewählten Zeitraum – einen Monat oder
-        ein Jahr. Es verlängert sich automatisch um denselben Zeitraum, solange du nicht
-        kündigst.
+        Kiara Plus läuft ab dem Kauf für einen Monat und verlängert sich automatisch um
+        einen weiteren Monat, solange du nicht kündigst. Nach der Zahlung wird Kiara Plus
+        innert 12 Stunden für die E-Mail-Adresse deines SYNORA-Kontos freigeschaltet.
       </p>
       <p>
         Du kannst jederzeit zum Ende des laufenden Zeitraums kündigen. Eine Nachricht an{' '}
         <a href={`mailto:${ANGABEN.email}`}>{ANGABEN.email}</a> genügt. Nach der
-        Kündigung bleibt Premium bis zum Ende des bezahlten Zeitraums aktiv, danach
-        wird dein Konto auf den Gratis-Tarif umgestellt. Dein Konto und deine
+        Kündigung bleibt Kiara Plus bis zum Ende des bezahlten Monats aktiv, danach
+        wird dein Konto auf Kiara (gratis) umgestellt. Dein Konto und deine
         Preisalarme bleiben bestehen.
       </p>
       <p>
@@ -782,7 +800,7 @@ function Nutzung({ daten }) {
         <>
           <h2>{nr()}. Widerruf</h2>
           <p>
-            Du kannst ein Premium-Abo innerhalb von {WIDERRUF_TAGE} Tagen nach dem Kauf
+            Du kannst Kiara Plus innerhalb von {WIDERRUF_TAGE} Tagen nach dem Kauf
             ohne Angabe von Gründen widerrufen. Eine Nachricht an{' '}
             <a href={`mailto:${ANGABEN.email}`}>{ANGABEN.email}</a> genügt. Der bezahlte
             Betrag wird vollständig zurückerstattet.

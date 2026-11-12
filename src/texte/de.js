@@ -66,7 +66,7 @@ const deutsch = {
     assistent: 'KI-Assistent',
     kategorien: 'Kategorien',
     preisalarme: 'Preisalarme',
-    premium: 'Premium',
+    premium: 'Kiara Plus',
     ueberUns: 'Über uns'
   },
 
@@ -137,7 +137,7 @@ const deutsch = {
         text: 'Gratis, sobald du ein Konto hast'
       },
       premium: {
-        titel: '{zahl} Suchen mit Premium',
+        titel: '{zahl} Suchen mit Kiara Plus',
         text: 'CHF {preis} im Monat'
       },
       ehrlich: {
@@ -256,7 +256,7 @@ const deutsch = {
     // Pflichtfeld ein Teil der Leute ab.
     vorteile: [
       { titel: '{zahl} Suchen im Monat', text: 'Gratis mit Konto.' },
-      { titel: 'Preisalarm mit Premium', text: 'SYNORA meldet sich, wenn der Preis fällt.' },
+      { titel: 'Preisalarm mit Kiara Plus', text: 'SYNORA meldet sich, wenn der Preis fällt.' },
       { titel: 'Unabhängig',             text: 'Keine Provision entscheidet über die Empfehlung.' }
     ],
 
@@ -349,9 +349,9 @@ const deutsch = {
     // Dokument, Moment 1: "Nicht bestrafen, sondern nach vorn
     // zeigen."
     limitErreicht:
-      'Du hast diesen Monat {genutzt} Mal gesucht. Mit Premium suchst du weiter – ' +
+      'Du hast diesen Monat {genutzt} Mal gesucht. Mit Kiara Plus suchst du weiter – ' +
       'und bekommst einen Preisalarm, der sich meldet, sobald dein Produkt günstiger wird.',
-    limitKnopf: 'Premium ansehen',
+    limitKnopf: 'Kiara Plus ansehen',
 
     ohneKonto:
       'Zum Suchen brauchst du ein Konto. Es ist kostenlos und dauert eine Minute.',
@@ -409,6 +409,7 @@ const deutsch = {
     meisteNehmen: 'Die meisten nehmen diese',
     nochNichtFrei: 'Noch nicht freigeschaltet',
     nochNichtKaeuflich: 'Noch nicht käuflich',
+    kaufHinweis: 'Freischaltung innert 12 Stunden. Bitte bei Stripe dieselbe Mailadresse angeben wie bei deinem Konto.',
     kontoErstellen: 'Konto erstellen',
     hastKonto: 'Du hast ein Konto',
     waehlen: '{name} wählen',
@@ -432,8 +433,8 @@ const deutsch = {
     versprechen1: 'Weil die Empfehlung nicht verhandelbar ist. Wer zahlt, bekommt nicht die besseren Produkte — sondern mehr Suchen und Werkzeuge, die Preise für ihn im Auge behalten.',
     versprechen2: 'Wären Empfehlungen käuflich, wäre SYNORA eine Werbeplattform mit Suchfeld. Davon gibt es genug.',
 
-    offenTitel: 'Premium kannst du gerade nicht kaufen',
-    offenText: 'Das ist Absicht. Solange SYNORA in der Testphase ist, wird Premium verschenkt statt verkauft — erst wenn die Empfehlungen gut genug sind, kostet es etwas.',
+    offenTitel: 'Kiara Plus kannst du gerade noch nicht kaufen',
+    offenText: 'Der Kauf wird gerade eingerichtet. Bis dahin suchst du mit Kiara gratis.',
 
     ladeFehlerTitel: 'Preise gerade nicht abrufbar',
     ladeFehlerText: 'Wir zeigen hier lieber nichts als eine Zahl, die vielleicht nicht stimmt.',
@@ -487,7 +488,7 @@ const deutsch = {
     anlegen: 'Preis beobachten',
     angelegt: 'SYNORA beobachtet dieses Produkt jetzt für dich.',
 
-    nurPremium: 'Preisalarme gibt es mit Premium.',
+    nurPremium: 'Preisalarme gibt es mit Kiara Plus.',
     vollTitel: 'Alle Plätze belegt',
     voll: 'Du beobachtest schon {zahl} Produkte. Entferne eines, um Platz zu machen.',
 
@@ -501,7 +502,7 @@ const deutsch = {
   kaufMelden: {
     titel: 'Kauf melden',
     untertitel:
-      'Hast du über SYNORA für mehr als CHF {betrag} gekauft? Dann bekommst du ein Jahr Premium geschenkt.',
+      'Hast du über SYNORA für mehr als CHF {betrag} gekauft? Dann bekommst du ein Jahr Kiara Plus geschenkt.',
     shop: 'In welchem Shop?',
     betrag: 'Betrag in CHF',
     bestellnummer: 'Bestellnummer',
@@ -510,7 +511,7 @@ const deutsch = {
     knopf: 'Kauf melden',
 
     gesendet:
-      'Danke. Wir schauen uns die Meldung an und schalten Premium frei, sobald wir den Kauf bestätigen können.',
+      'Danke. Wir schauen uns die Meldung an und schalten Kiara Plus frei, sobald wir den Kauf bestätigen können.',
 
     // Ehrlich sagen, dass von Hand geprueft wird. Wer das weiss,
     // wartet geduldiger - und ueberlegt es sich zweimal, falsche

@@ -46,7 +46,7 @@ const english = {
     assistent: 'AI Assistant',
     kategorien: 'Categories',
     preisalarme: 'Price alerts',
-    premium: 'Premium',
+    premium: 'Kiara Plus',
     ueberUns: 'About'
   },
 
@@ -93,7 +93,7 @@ const english = {
         text: 'Free once you have an account'
       },
       premium: {
-        titel: '{zahl} searches with Premium',
+        titel: '{zahl} searches with Kiara Plus',
         text: 'CHF {preis} a month'
       },
       ehrlich: {
@@ -189,7 +189,7 @@ const english = {
 
     vorteile: [
       { titel: '{zahl} searches a month',   text: 'Free with an account.' },
-      { titel: 'Price alerts with Premium', text: 'SYNORA tells you when the price drops.' },
+      { titel: 'Price alerts with Kiara Plus', text: 'SYNORA tells you when the price drops.' },
       { titel: 'Independent',               text: 'No commission decides the recommendation.' }
     ],
 
@@ -269,9 +269,9 @@ const english = {
     dagegen: 'Against',
 
     limitErreicht:
-      'You have searched {genutzt} times this month. With Premium you keep searching – ' +
+      'You have searched {genutzt} times this month. With Kiara Plus you keep searching – ' +
       'and get a price alert that tells you as soon as your product gets cheaper.',
-    limitKnopf: 'See Premium',
+    limitKnopf: 'See Kiara Plus',
 
     ohneKonto:
       'You need an account to search. It is free and takes a minute.',
@@ -319,6 +319,7 @@ const english = {
     meisteNehmen: 'Most people pick this',
     nochNichtFrei: 'Not unlocked yet',
     nochNichtKaeuflich: 'Not for sale yet',
+    kaufHinweis: 'Unlocked within 12 hours. Please use the same email address at Stripe as for your account.',
     kontoErstellen: 'Create account',
     hastKonto: 'You have an account',
     waehlen: 'Choose {name}',
@@ -342,8 +343,8 @@ const english = {
     versprechen1: 'Because the recommendation is not negotiable. Paying does not get you the better products — it gets you more searches and tools that watch prices for you.',
     versprechen2: 'If recommendations were for sale, SYNORA would be an ad platform with a search box. There are plenty of those.',
 
-    offenTitel: 'You cannot buy Premium right now',
-    offenText: 'That is on purpose. While SYNORA is in testing, Premium is given away rather than sold — it will only cost something once the recommendations are good enough.',
+    offenTitel: 'You cannot buy Kiara Plus just yet',
+    offenText: 'Checkout is being set up. Until then, Kiara is free.',
 
     ladeFehlerTitel: 'Prices not available right now',
     ladeFehlerText: 'We would rather show nothing than a number that might be wrong.',
@@ -391,7 +392,7 @@ const english = {
     anlegen: 'Watch price',
     angelegt: 'SYNORA is now watching this product for you.',
 
-    nurPremium: 'Price alerts come with Premium.',
+    nurPremium: 'Price alerts come with Kiara Plus.',
     vollTitel: 'All slots taken',
     voll: 'You are already watching {zahl} products. Remove one to make room.',
 
@@ -401,7 +402,7 @@ const english = {
   kaufMelden: {
     titel: 'Report a purchase',
     untertitel:
-      'Bought something through SYNORA for more than CHF {betrag}? Then a year of Premium is on us.',
+      'Bought something through SYNORA for more than CHF {betrag}? Then a year of Kiara Plus is on us.',
     shop: 'Which shop?',
     betrag: 'Amount in CHF',
     bestellnummer: 'Order number',
@@ -410,7 +411,7 @@ const english = {
     knopf: 'Report purchase',
 
     gesendet:
-      'Thank you. We will look at your report and unlock Premium once we can confirm the purchase.',
+      'Thank you. We will look at your report and unlock Kiara Plus once we can confirm the purchase.',
 
     hinweis: 'Every report is checked by hand. That takes a few days.'
   },
