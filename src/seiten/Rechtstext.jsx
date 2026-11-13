@@ -735,7 +735,7 @@ function Nutzung({ daten }) {
           nichts als eine Ersatzzahl. Eine AGB-Seite, die im
           Zweifel irgendeinen Preis nennt, ist genau das
           Problem, das diese Seite vermeiden soll. */}
-      <h2>{nr()}. Premium</h2>
+      <h2>{nr()}. Kiara Plus</h2>
       {bezahlt.length > 0 ? (
         <>
           <p>Zur Zeit gelten diese Preise:</p>
@@ -896,7 +896,7 @@ function Nutzung({ daten }) {
         ist.
       </p>
       <p>
-        Fällt Premium länger als zusammenhängend sieben Tage aus, verlängert sich dein
+        Fällt Kiara Plus länger als zusammenhängend sieben Tage aus, verlängert sich dein
         Abo um die Ausfallzeit.
       </p>
 

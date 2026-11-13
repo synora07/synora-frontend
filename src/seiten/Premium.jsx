@@ -69,7 +69,7 @@ import './Premium.css';
 // den Pfad ein, zum Beispiel '/premium/kaufen', und legst die
 // Seite in App.jsx als Route an. Beides - sonst ist der Fehler
 // wieder da.
-const KAUF_PFAD = null;
+const KAUF_PFAD = 'https://buy.stripe.com/5kQfZ9gZi87XbtXgrr6EU01';
 
 
 // Die Zeilen der Tabelle. Reihenfolge wie im Dokument.

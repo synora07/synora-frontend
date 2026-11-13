@@ -129,6 +129,11 @@ const AENDERUNGEN = [
     alt: '<a href="/premium">Premium-Seite</a>', neu: '<a href="/premium">Preisseite</a>',
     fertig: '<a href="/premium">Preisseite</a>' },
 
+  { d: 'recht', was: 'AGB: Ueberschrift', art: 'text',
+    alt: '<h2>{nr()}. Premium</h2>', neu: '<h2>{nr()}. Kiara Plus</h2>', fertig: '<h2>{nr()}. Kiara Plus</h2>' },
+  { d: 'recht', was: 'AGB: Ausfall', art: 'text',
+    alt: 'F\u00e4llt Premium l\u00e4nger als', neu: 'F\u00e4llt Kiara Plus l\u00e4nger als', fertig: 'F\u00e4llt Kiara Plus l\u00e4nger als' },
+
   // ---------- Texte Deutsch ----------
   { d: 'de', was: 'DE Menue', art: 'text', alt: "premium: 'Premium',", neu: "premium: 'Kiara Plus',", fertig: "premium: 'Kiara Plus'," },
   { d: 'de', was: 'DE Startseite Suchen', art: 'text', alt: "'{zahl} Suchen mit Premium'", neu: "'{zahl} Suchen mit Kiara Plus'", fertig: "'{zahl} Suchen mit Kiara Plus'" },
